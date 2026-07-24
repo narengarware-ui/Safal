@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>शेत CRM · Karad Vegetable Farm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<style>
+:root{
+  --green-dark:#1F4E2C;
+  --green:#3E7B4F;
+  --green-soft:#E7F0E5;
+  --turmeric:#E8A33D;
+  --turmeric-soft:#FBEBD1;
+  --soil:#4A3423;
+  --bg:#F6F4EC;
+  --card:#FFFFFF;
+  --line:#E4DFD0;
+  --text:#2B2620;
+  --text-mute:#7A7264;
+  --red:#C24A3B;
+  --red-soft:#FBE7E3;
+  --radius:16px;
+  --shadow:0 2px 10px rgba(74,52,35,0.08);
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:0;}
+body,input,select,textarea,button{font-family:'Inter',sans-serif;}
+h1,h2,h3,.font-display{font-family:'Poppins',sans-serif;}
+.dv{font-family:'Noto Sans Devanagari',sans-serif;}
+#app{
+  max-width:480px;
+  margin:0 auto;
+  background:var(--bg);
+  min-height:100vh;
+  color:var(--text);
+  position:relative;
+  padding-bottom:78px;
+}
+header.top{
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
+  color:#fff;
+  padding:18px 18px 22px;
+  border-radius:0 0 22px 22px;
+  box-shadow:var(--shadow);
+}
+header.top .eyebrow{font-size:12px;opacity:0.85;letter-spacing:0.4px;margin-bottom:2px;}
+header.top h1{margin:0;font-size:21px;font-weight:700;}
+header.top .sub{font-size:12.5px;opacity:0.9;margin-top:4px;}
+main{padding:14px 14px 10px;}
+.section-title{font-size:15px;font-weight:700;color:var(--green-dark);margin:18px 0 8px;display:flex;align-items:center;gap:6px;}
+.section-title .tag{font-size:11px;font-weight:600;color:var(--text-mute);background:var(--line);padding:2px 8px;border-radius:20px;margin-left:auto;}
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow);
+  border:1px solid var(--line);
+}
+.stat-row{display:flex;gap:10px;margin-top:12px;}
+.stat{flex:1;background:rgba(255,255,255,0.14);border-radius:12px;padding:10px 12px;}
+.stat .num{font-size:19px;font-weight:700;font-family:'Poppins',sans-serif;}
+.stat .lbl{font-size:10.5px;opacity:0.85;margin-top:1px;}
+.btn{
+  border:none;border-radius:12px;padding:10px 16px;font-weight:600;font-size:13.5px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-primary{background:var(--green);color:#fff;}
+.btn-primary:active{background:var(--green-dark);}
+.btn-accent{background:var(--turmeric);color:#3a2809;}
+.btn-outline{background:transparent;border:1.5px solid var(--line);color:var(--text);}
+.btn-ghost{background:var(--green-soft);color:var(--green-dark);}
+.btn-danger{background:var(--red-soft);color:var(--red);}
+.btn-sm{padding:6px 10px;font-size:12px;border-radius:9px;}
+.btn-full{width:100%;justify-content:center;}
+.row-between{display:flex;justify-content:space-between;align-items:center;}
+label{font-size:12px;font-weight:600;color:var(--text-mute);display:block;margin:10px 0 4px;}
+input,select,textarea{
+  width:100%;padding:10px 11px;border-radius:10px;border:1.5px solid var(--line);
+  background:#fff;font-size:14px;color:var(--text);
+}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--green);border-color:var(--green);}
+textarea{resize:vertical;min-height:50px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;}
+.form-card{background:var(--green-soft);border:1px dashed var(--green);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+.form-card h3{margin:0 0 2px;font-size:14.5px;color:var(--green-dark);}
+.plot-card{border-left:4px solid var(--green);}
+.plot-head{display:flex;justify-content:space-between;align-items:flex-start;}
+.plot-name{font-weight:700;font-size:15px;}
+.plot-veg{font-size:12.5px;color:var(--text-mute);}
+.badge{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.badge-green{background:var(--green-soft);color:var(--green-dark);}
+.badge-turmeric{background:var(--turmeric-soft);color:#8a5a12;}
+.badge-red{background:var(--red-soft);color:var(--red);}
+.progress-track{height:7px;background:var(--line);border-radius:6px;margin:10px 0 4px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--turmeric));border-radius:6px;}
+.stage-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-mute);}
+.mini-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.empty{
+  text-align:center;padding:36px 16px;color:var(--text-mute);
+}
+.empty .icon{font-size:34px;margin-bottom:8px;}
+.log-item{border-bottom:1px solid var(--line);padding:9px 0;display:flex;justify-content:space-between;gap:8px;}
+.log-item:last-child{border-bottom:none;}
+.log-item .meta{font-size:11.5px;color:var(--text-mute);margin-top:2px;}
+.log-item .amt{font-weight:700;font-size:13.5px;white-space:nowrap;}
+.pill-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:10px;}
+.pill{padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:600;white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--text-mute);cursor:pointer;}
+.pill.active{background:var(--green-dark);color:#fff;border-color:var(--green-dark);}
+nav.bottom{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;
+  background:#fff;border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;
+  padding:7px 2px 9px;box-shadow:0 -2px 12px rgba(0,0,0,0.06);
+  z-index:20;
+}
+nav.bottom .nitem{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-size:9.5px;color:var(--text-mute);font-weight:600;cursor:pointer;
+  flex:1;padding:4px 0;
+}
+nav.bottom .nitem .ic{font-size:19px;}
+nav.bottom .nitem.active{color:var(--green-dark);}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.summary-box{border-radius:12px;padding:12px;}
+.summary-box.income{background:var(--green-soft);}
+.summary-box.expense{background:var(--red-soft);}
+.summary-box .lbl{font-size:11px;color:var(--text-mute);font-weight:600;}
+.summary-box .val{font-size:18px;font-weight:700;margin-top:2px;font-family:'Poppins',sans-serif;}
+.divider{height:1px;background:var(--line);margin:12px 0;}
+.tip-box{background:var(--turmeric-soft);border-radius:12px;padding:10px 12px;font-size:12px;color:#6b4610;margin-top:8px;}
+.close-x{background:none;border:none;font-size:18px;color:var(--text-mute);cursor:pointer;padding:0 4px;}
+a.linklike{color:var(--green-dark);font-weight:600;text-decoration:underline;cursor:pointer;font-size:12.5px;}
+.toast{
+  position:fixed;bottom:88px;left:50%;transform:translateX(-50%);
+  background:var(--soil);color:#fff;padding:9px 16px;border-radius:20px;
+  font-size:12.5px;z-index:40;box-shadow:var(--shadow);opacity:0;transition:opacity .25s;
+  max-width:420px;text-align:center;
+}
+.toast.show{opacity:1;}
+::-webkit-scrollbar{height:5px;width:5px;}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+</style>
+</head>
+<body>
+<div id="app"><div class="empty"><div class="icon">🌱</div>Loading your farm…</div></div>
+
+<script>
+/* ---------------- Crop Database (Western Maharashtra / Karad-Satara belt) ---------------- */
+const CROP_DB = {
+  "Tomato": {mr:"टोमॅटो", duration:110, stages:[["Nursery / Sowing",0],["Transplanting",25],["Vegetative Growth",35],["Flowering",45],["Fruit Development",55],["First Harvest",70],["Harvest Ends",110]],
+    pests:["Fruit borer","Whitefly","Early blight","Leaf curl virus"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (transplanting)", input:"Well-rotted FYM", qty:200, unit:"kg", method:"Mix into soil/pit before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"SSP (Single Super Phosphate)", qty:2.5, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"MOP (Potash)", qty:1, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:20, stage:"Vegetative growth", input:"Urea", qty:1.2, unit:"kg", method:"Top dressing near root zone, irrigate right after"},
+      {day:40, stage:"Flowering", input:"Urea", qty:1, unit:"kg", method:"Top dressing, then earth up around the base"},
+      {day:40, stage:"Flowering", input:"MOP (Potash)", qty:1, unit:"kg", method:"Top dressing along with urea to help fruit set"},
+      {day:55, stage:"Fruit development", input:"Calcium Nitrate", qty:null, unit:"", method:"Foliar spray – 5g/litre water, ~15L per Guntha, prevents blossom end rot"},
+      {day:70, stage:"Harvesting", input:"NPK 19:19:19", qty:null, unit:"", method:"Foliar spray – 5g/litre water, repeat every 15 days through harvest"}
+    ]},
+  "Brinjal (Vangi)": {mr:"वांगी", duration:130, stages:[["Nursery / Sowing",0],["Transplanting",30],["Vegetative Growth",45],["Flowering",55],["First Harvest",75],["Harvest Ends",130]],
+    pests:["Shoot & fruit borer","Jassids","Aphids","Bacterial wilt"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (transplanting)", input:"Well-rotted FYM", qty:200, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"SSP", qty:3, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"MOP (Potash)", qty:1, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:30, stage:"Vegetative growth", input:"Urea", qty:1.2, unit:"kg", method:"Top dressing after transplant establishes, irrigate after"},
+      {day:50, stage:"Flowering", input:"Urea", qty:1, unit:"kg", method:"Top dressing"},
+      {day:50, stage:"Flowering", input:"MOP (Potash)", qty:1, unit:"kg", method:"Top dressing along with urea"},
+      {day:75, stage:"Harvesting", input:"Urea", qty:0.5, unit:"kg", method:"Light split top dressing every 20 days through harvest"}
+    ]},
+  "Chilli (Mirchi)": {mr:"मिरची", duration:150, stages:[["Nursery / Sowing",0],["Transplanting",30],["Vegetative Growth",45],["Flowering",60],["First Harvest",80],["Harvest Ends",150]],
+    pests:["Thrips","Mites","Fruit rot / anthracnose","Aphids"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (transplanting)", input:"Well-rotted FYM", qty:200, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"SSP", qty:3, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"MOP (Potash)", qty:1, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:30, stage:"Vegetative growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing after transplant, irrigate after"},
+      {day:58, stage:"Pre-flowering", input:"Urea + MOP", qty:1, unit:"kg each", method:"Top dressing before flowering starts"},
+      {day:80, stage:"Fruit set", input:"Zinc Sulphate + Borax", qty:null, unit:"", method:"Foliar spray – Zinc 5g/L + Borax 1g/L, boosts fruit set"},
+      {day:100, stage:"Harvesting", input:"Urea", qty:0.5, unit:"kg", method:"Light split top dressing every 20 days through picking"}
+    ]},
+  "Okra (Bhendi)": {mr:"भेंडी", duration:60, stages:[["Direct Sowing",0],["Germination",6],["Vegetative Growth",20],["Flowering",35],["First Harvest",45],["Harvest Ends",60]],
+    pests:["Shoot & fruit borer","Jassids","YVMV virus","Aphids"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into the furrow before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into the furrow before sowing"},
+      {day:20, stage:"Vegetative growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing, irrigate right after"},
+      {day:35, stage:"Flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing at flowering"},
+      {day:45, stage:"Harvesting", input:"Urea", qty:0.3, unit:"kg", method:"Light split dose every 10 days while picking"}
+    ]},
+  "Cabbage (Kobi)": {mr:"कोबी", duration:100, stages:[["Nursery / Sowing",0],["Transplanting",25],["Vegetative Growth",45],["Head Formation",65],["First Harvest",90],["Harvest Ends",100]],
+    pests:["Diamondback moth","Aphids","Cabbage looper","Club root"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (transplanting)", input:"FYM", qty:200, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"SSP", qty:2.5, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"MOP (Potash)", qty:1, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:27, stage:"Vegetative growth", input:"Urea", qty:1.2, unit:"kg", method:"First top dressing after transplant establishes"},
+      {day:45, stage:"Vegetative growth", input:"Urea", qty:1, unit:"kg", method:"Second split for leafy growth"},
+      {day:65, stage:"Head formation", input:"MOP (Potash)", qty:1, unit:"kg", method:"Top dressing for firm head development"}
+    ]},
+  "Cauliflower (Phulkobi)": {mr:"फुलकोबी", duration:100, stages:[["Nursery / Sowing",0],["Transplanting",25],["Vegetative Growth",45],["Curd Formation",65],["First Harvest",85],["Harvest Ends",100]],
+    pests:["Diamondback moth","Cabbage worm","Aphids","Black rot"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (transplanting)", input:"FYM", qty:200, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"SSP", qty:2.5, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"MOP (Potash)", qty:1, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:27, stage:"Vegetative growth", input:"Urea", qty:1.2, unit:"kg", method:"Top dressing after transplant establishes"},
+      {day:50, stage:"Pre-curd", input:"Borax", qty:null, unit:"", method:"Foliar spray – 1g/litre water, prevents hollow stem/browning"},
+      {day:65, stage:"Curd formation", input:"MOP (Potash)", qty:1, unit:"kg", method:"Top dressing for curd firmness"}
+    ]},
+  "Cucumber (Kakdi)": {mr:"काकडी", duration:60, stages:[["Direct Sowing",0],["Germination",6],["Vine Growth",20],["Flowering",30],["First Harvest",40],["Harvest Ends",60]],
+    pests:["Fruit fly","Red pumpkin beetle","Downy mildew","Aphids"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:20, stage:"Vine growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing as vines spread, irrigate after"},
+      {day:30, stage:"Flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing at flowering to aid fruit set"}
+    ]},
+  "Bottle Gourd (Dudhi)": {mr:"दुधी भोपळा", duration:70, stages:[["Direct Sowing",0],["Germination",7],["Vine Growth",20],["Flowering",35],["First Harvest",45],["Harvest Ends",70]],
+    pests:["Fruit fly","Aphids","Powdery mildew"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:20, stage:"Vine growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing, irrigate after"},
+      {day:35, stage:"Flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing at flowering"}
+    ]},
+  "Bitter Gourd (Karle / Karla)": {mr:"कारले", duration:75, stages:[["Direct Sowing",0],["Germination",7],["Vine Growth",22],["Flowering",38],["First Harvest",48],["Harvest Ends",75]],
+    pests:["Fruit fly","Red pumpkin beetle","Powdery mildew"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:22, stage:"Vine growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing, irrigate after"},
+      {day:38, stage:"Flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing at flowering"}
+    ]},
+  "Onion (Kanda)": {mr:"कांदा", duration:120, stages:[["Nursery / Sowing",0],["Transplanting",35],["Vegetative Growth",60],["Bulb Formation",85],["Neck Fall / Maturity",110],["Harvest",120]],
+    pests:["Thrips","Purple blotch","Stemphylium blight"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (transplanting)", input:"FYM", qty:200, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"SSP", qty:2.5, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"MOP (Potash)", qty:1, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:35, stage:"Vegetative growth", input:"Urea", qty:1.2, unit:"kg", method:"First top dressing after transplant establishes"},
+      {day:60, stage:"Vegetative growth", input:"Urea", qty:1, unit:"kg", method:"Second N split"},
+      {day:85, stage:"Bulb formation", input:"MOP (Potash) + Sulphur", qty:1, unit:"kg each", method:"Top dressing for bulb size and pungency"}
+    ]},
+  "Coriander (Kothimbir)": {mr:"कोथिंबीर", duration:40, stages:[["Direct Sowing",0],["Germination",8],["Vegetative Growth",20],["First Harvest",30],["Harvest Ends",40]],
+    pests:["Aphids","Powdery mildew"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:100, unit:"kg", method:"Mix into soil before sowing"},
+      {day:15, stage:"Vegetative growth", input:"Urea", qty:0.5, unit:"kg", method:"Light top dressing, keep soil consistently moist"}
+    ]},
+  "Fenugreek (Methi)": {mr:"मेथी", duration:35, stages:[["Direct Sowing",0],["Germination",6],["Vegetative Growth",18],["First Harvest",25],["Harvest Ends",35]],
+    pests:["Aphids","Powdery mildew","Damping off"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:100, unit:"kg", method:"Mix into soil before sowing"},
+      {day:15, stage:"Vegetative growth", input:"Urea", qty:0.4, unit:"kg", method:"Light top dressing before first cutting"}
+    ]},
+  "Spinach (Palak)": {mr:"पालक", duration:40, stages:[["Direct Sowing",0],["Germination",7],["Vegetative Growth",18],["First Harvest",25],["Harvest Ends",40]],
+    pests:["Aphids","Leaf miner"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM + Urea", qty:0.3, unit:"kg urea + FYM", method:"Basal mix into soil before sowing"},
+      {day:18, stage:"After first cutting", input:"Urea", qty:0.3, unit:"kg", method:"Top dressing to push regrowth"},
+      {day:28, stage:"After second cutting", input:"Urea", qty:0.3, unit:"kg", method:"Top dressing to push regrowth"}
+    ]},
+  "French Beans (Ghevda)": {mr:"घेवडा", duration:65, stages:[["Direct Sowing",0],["Germination",8],["Vegetative Growth",25],["Flowering",35],["First Harvest",45],["Harvest Ends",65]],
+    pests:["Aphids","Pod borer","Bean fly"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into soil before sowing (treat seed with Rhizobium culture first)"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Mix into soil before sowing – keep N low, legume fixes its own nitrogen"},
+      {day:25, stage:"Pre-flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing before flowering to boost pod set"}
+    ]},
+  "Capsicum (Simla Mirchi)": {mr:"सिमला मिरची", duration:130, stages:[["Nursery / Sowing",0],["Transplanting",35],["Vegetative Growth",50],["Flowering",65],["First Harvest",85],["Harvest Ends",130]],
+    pests:["Thrips","Aphids","Fruit rot","Mites"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (transplanting)", input:"FYM", qty:200, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"SSP", qty:3, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:0, stage:"Basal (transplanting)", input:"MOP (Potash)", qty:1, unit:"kg", method:"Mix into soil before transplanting"},
+      {day:35, stage:"Vegetative growth", input:"Urea", qty:1.2, unit:"kg", method:"Top dressing after transplant establishes"},
+      {day:62, stage:"Pre-flowering", input:"Urea + MOP", qty:1, unit:"kg each", method:"Top dressing before flowering"},
+      {day:85, stage:"Fruit set", input:"Calcium Nitrate", qty:null, unit:"", method:"Foliar spray – 5g/litre water, prevents fruit blossom rot"}
+    ]},
+  "Carrot (Gajar)": {mr:"गाजर", duration:100, stages:[["Direct Sowing",0],["Germination",10],["Vegetative Growth",35],["Root Bulking",65],["Harvest",100]],
+    pests:["Aphids","Root fly","Leaf blight"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into loose, well-drained soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing – keep N low to avoid root forking"},
+      {day:35, stage:"Root bulking", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing to support root development"}
+    ]},
+  "Radish (Mula)": {mr:"मुळा", duration:40, stages:[["Direct Sowing",0],["Germination",6],["Vegetative Growth",18],["Root Bulking",28],["Harvest",40]],
+    pests:["Aphids","Flea beetle"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:100, unit:"kg", method:"Mix into soil before sowing – keep N low"},
+      {day:18, stage:"Root bulking", input:"MOP (Potash)", qty:0.3, unit:"kg", method:"Light top dressing; keep soil consistently moist"}
+    ]},
+  "Green Peas (Vatana)": {mr:"वाटाणा", duration:75, stages:[["Direct Sowing",0],["Germination",8],["Vegetative Growth",30],["Flowering",45],["First Harvest",60],["Harvest Ends",75]],
+    pests:["Aphids","Pod borer","Powdery mildew"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Mix into soil before sowing – keep N low, legume fixes its own nitrogen"},
+      {day:30, stage:"Pre-flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing before flowering; staking helps pod quality"}
+    ]},
+  "Cluster Beans (Gawar)": {mr:"गवार", duration:65, stages:[["Direct Sowing",0],["Germination",7],["Vegetative Growth",25],["Flowering",35],["First Harvest",45],["Harvest Ends",65]],
+    pests:["Aphids","Whitefly","Jassids","Bacterial blight"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:100, unit:"kg", method:"Mix into soil before sowing (treat seed with Rhizobium culture first)"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Mix into soil before sowing – keep N low, legume fixes its own nitrogen"},
+      {day:25, stage:"Pre-flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing before flowering to boost pod set"}
+    ]},
+  "Ridge Gourd (Dodka / Ghosale)": {mr:"दोडका / घोसाळे", duration:70, stages:[["Direct Sowing",0],["Germination",7],["Vine Growth",20],["Flowering",35],["First Harvest",45],["Harvest Ends",70]],
+    pests:["Fruit fly","Red pumpkin beetle","Epilachna beetle","Downy mildew"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:20, stage:"Vine growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing as vines spread, irrigate after"},
+      {day:35, stage:"Flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing at flowering; set up trellis by day 20"}
+    ]},
+  "Snake Gourd (Padwal)": {mr:"पडवळ", duration:75, stages:[["Direct Sowing",0],["Germination",7],["Vine Growth",22],["Flowering",38],["First Harvest",50],["Harvest Ends",75]],
+    pests:["Fruit fly","Aphids","Powdery mildew"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:22, stage:"Vine growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing, irrigate after; provide trellis/pandal for straight fruits"},
+      {day:38, stage:"Flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing at flowering"}
+    ]},
+  "Ivy Gourd (Tondli)": {mr:"तोंडली", duration:300, stages:[["Planting (cuttings)",0],["Vine Establishment",30],["Flowering",70],["First Harvest",90],["Continuous Harvest",300]],
+    pests:["Fruit fly","Aphids","Leaf webber"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (planting)", input:"FYM", qty:100, unit:"kg", method:"Mix into soil/pit before planting cuttings"},
+      {day:0, stage:"Basal (planting)", input:"SSP", qty:1, unit:"kg", method:"Mix into soil before planting"},
+      {day:30, stage:"Vine establishment", input:"Urea", qty:0.5, unit:"kg", method:"Top dressing once vines start climbing; set up trellis/pandal"},
+      {day:90, stage:"Continuous harvest", input:"Urea", qty:0.3, unit:"kg", method:"Repeat every 30 days through the ongoing harvest, this is a perennial vine"}
+    ]},
+  "Field Beans (Val / Papdi)": {mr:"वाल / पापडी", duration:120, stages:[["Direct Sowing",0],["Germination",8],["Vegetative Growth",30],["Flowering",60],["First Harvest",90],["Harvest Ends",120]],
+    pests:["Aphids","Pod borer","Powdery mildew"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:150, unit:"kg", method:"Mix into soil before sowing (treat seed with Rhizobium culture first)"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Mix into soil before sowing – keep N low, legume fixes its own nitrogen"},
+      {day:60, stage:"Pre-flowering", input:"MOP (Potash)", qty:0.5, unit:"kg", method:"Top dressing before flowering; provide staking/support"}
+    ]},
+  "Drumstick (Shevga)": {mr:"शेवगा", duration:365, stages:[["Sowing / Planting",0],["Vegetative Growth",60],["Flowering",120],["First Harvest",180],["Continuous Harvest",365]],
+    pests:["Aphids","Hairy caterpillar","Fruit fly","Leaf webber"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (planting)", input:"FYM", qty:200, unit:"kg", method:"Mix into pit before planting"},
+      {day:0, stage:"Basal (planting)", input:"SSP", qty:2, unit:"kg", method:"Mix into pit before planting"},
+      {day:60, stage:"Vegetative growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing around the base, irrigate after"},
+      {day:120, stage:"Pre-flowering", input:"MOP (Potash)", qty:1, unit:"kg", method:"Top dressing before flowering to boost pod set"}
+    ]},
+  "Pumpkin (Bhopla / Kaddu)": {mr:"भोपळा", duration:100, stages:[["Direct Sowing",0],["Germination",7],["Vine Growth",25],["Flowering",45],["First Harvest",70],["Harvest Ends",100]],
+    pests:["Fruit fly","Red pumpkin beetle","Powdery mildew"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:200, unit:"kg", method:"Mix into soil before sowing"},
+      {day:0, stage:"Basal (sowing)", input:"SSP", qty:2, unit:"kg", method:"Mix into soil before sowing"},
+      {day:25, stage:"Vine growth", input:"Urea", qty:1, unit:"kg", method:"Top dressing as vines spread, irrigate after"},
+      {day:45, stage:"Flowering", input:"MOP (Potash)", qty:1, unit:"kg", method:"Top dressing at flowering to help fruit set"}
+    ]},
+  "Potato (Batata)": {mr:"बटाटा", duration:90, stages:[["Planting",0],["Sprouting",15],["Vegetative Growth",35],["Tuber Initiation",55],["Tuber Bulking",75],["Harvest",90]],
+    pests:["Aphids","Potato tuber moth","Late blight","Cutworm"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (planting)", input:"FYM", qty:200, unit:"kg", method:"Mix into the furrow before planting seed tubers"},
+      {day:0, stage:"Basal (planting)", input:"SSP", qty:2.5, unit:"kg", method:"Mix into the furrow before planting"},
+      {day:0, stage:"Basal (planting)", input:"MOP (Potash)", qty:1.5, unit:"kg", method:"Mix into the furrow before planting"},
+      {day:25, stage:"Vegetative growth", input:"Urea", qty:1.5, unit:"kg", method:"Top dressing followed by first earthing up"},
+      {day:45, stage:"Tuber initiation", input:"Urea + MOP", qty:1, unit:"kg each", method:"Top dressing followed by second earthing up"}
+    ]},
+  "Amaranthus Greens (Math)": {mr:"माठ भाजी", duration:30, stages:[["Direct Sowing",0],["Germination",5],["Vegetative Growth",15],["First Harvest",22],["Harvest Ends",30]],
+    pests:["Aphids","Leaf webber"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM + Urea", qty:0.3, unit:"kg urea + FYM", method:"Basal mix into soil before sowing"},
+      {day:15, stage:"After first cutting", input:"Urea", qty:0.3, unit:"kg", method:"Top dressing to push regrowth"}
+    ]},
+  "Dill (Shepu)": {mr:"शेपू", duration:35, stages:[["Direct Sowing",0],["Germination",7],["Vegetative Growth",18],["First Harvest",25],["Harvest Ends",35]],
+    pests:["Aphids"],
+    nutritionPlan:[
+      {day:0, stage:"Basal (sowing)", input:"FYM", qty:80, unit:"kg", method:"Mix into soil before sowing"},
+      {day:15, stage:"Vegetative growth", input:"Urea", qty:0.3, unit:"kg", method:"Light top dressing, keep soil consistently moist"}
+    ]}
+};
+const PEST_DB = {
+  "Early blight": {symptoms:"Dark brown spots with concentric rings ('target-board' pattern) on older leaves first, leaves yellow and drop; can spread to stems and fruit.", organic:"Remove and destroy affected lower leaves; avoid overhead irrigation; mulch to prevent soil splash onto leaves.", chemical:"Spray Mancozeb 75% WP @ 2.5g/L or Chlorothalonil @ 2g/L every 10 days, starting at first symptoms."},
+  "Aphids": {symptoms:"Small green/black insects clustering on new shoots and leaf undersides; leaves curl and turn sticky with honeydew, sometimes sooty mould.", organic:"Spray neem oil 5ml/L every 7 days; blast with plain water to dislodge; encourage ladybird beetles.", chemical:"Imidacloprid 17.8% SL @ 0.3ml/L or Thiamethoxam 25% WG @ 0.3g/L, spray in the evening."},
+  "Whitefly": {symptoms:"Tiny white flying insects on leaf undersides; leaves yellow and sticky; spreads viral diseases like leaf curl.", organic:"Yellow sticky traps (12-15 per Guntha); neem oil 5ml/L spray every 7 days.", chemical:"Diafenthiuron 50% WP @ 1g/L or Imidacloprid 17.8% SL @ 0.3ml/L."},
+  "Thrips": {symptoms:"Silvery streaks and specks on leaves and flowers; leaves curl and distort; spreads viruses.", organic:"Blue sticky traps; neem oil 5ml/L spray.", chemical:"Fipronil 5% SC @ 2ml/L or Spinosad 45% SC @ 0.3ml/L."},
+  "Mites": {symptoms:"Fine webbing on leaf undersides, bronzing or yellowing; leaves curl and dry, worse in hot dry weather.", organic:"Spray water on leaf undersides to raise humidity; wettable sulfur 3g/L.", chemical:"Propargite 57% EC @ 2ml/L or Fenazaquin 10% EC @ 1ml/L."},
+  "Fruit borer": {symptoms:"Round holes in fruit with visible frass; caterpillar feeding inside; affected fruit drops early.", organic:"Pheromone traps (8 per acre); hand-pick and destroy affected fruit; neem seed extract 5%.", chemical:"Emamectin benzoate 5% SG @ 0.4g/L or Chlorantraniliprole 18.5% SC @ 0.3ml/L."},
+  "Shoot & fruit borer": {symptoms:"Wilted shoot tips ('dead heart'); bored fruits with entry holes and frass.", organic:"Clip and destroy affected shoots/fruits regularly; pheromone traps.", chemical:"Emamectin benzoate 5% SG @ 0.4g/L or Cypermethrin 25% EC @ 1ml/L."},
+  "Jassids": {symptoms:"Yellow-brown scorched ('hopper burn') leaf edges, curling, stunted growth.", organic:"Neem oil spray; yellow sticky traps.", chemical:"Imidacloprid 17.8% SL @ 0.3ml/L."},
+  "Bacterial wilt": {symptoms:"Sudden wilting of the whole plant despite moist soil; cut stem oozes a milky bacterial thread in a water test.", organic:"Remove and burn infected plants immediately; rotate with non-solanaceous crops for 2-3 years; avoid waterlogging.", chemical:"Drench soil near roots with Copper oxychloride 3g/L + Streptocycline 0.5g in 10L water as a preventive; no cure once a plant is infected."},
+  "Fruit rot / anthracnose": {symptoms:"Sunken, dark, water-soaked spots on fruit that enlarge with concentric rings; fruit rots.", organic:"Remove and destroy infected fruit; avoid overhead irrigation; keep good plant spacing for airflow.", chemical:"Spray Carbendazim 50% WP @ 1g/L or Copper oxychloride 3g/L every 10 days."},
+  "Fruit rot": {symptoms:"Sunken, dark, water-soaked spots on fruit that enlarge with concentric rings; fruit rots.", organic:"Remove and destroy infected fruit; avoid overhead irrigation; keep good plant spacing for airflow.", chemical:"Spray Carbendazim 50% WP @ 1g/L or Copper oxychloride 3g/L every 10 days."},
+  "YVMV virus": {symptoms:"Yellow network of veins on leaves, stunted plants, small pale fruit; spread by whitefly.", organic:"Remove and destroy infected plants early; control the whitefly vector; use tolerant varieties.", chemical:"Control whitefly with Imidacloprid 17.8% SL @ 0.3ml/L — the virus itself has no cure."},
+  "Diamondback moth": {symptoms:"Small green caterpillars chewing window-pane holes or skeletonizing leaves, mainly on cabbage-family crops.", organic:"Pheromone traps; Bt (Bacillus thuringiensis) spray 2g/L; neem oil.", chemical:"Spinosad 45% SC @ 0.3ml/L — rotate chemical groups to avoid resistance."},
+  "Cabbage looper": {symptoms:"Green caterpillars that arch/loop while moving, chewing large ragged holes in leaves.", organic:"Hand-pick caterpillars; Bt spray; neem oil.", chemical:"Chlorantraniliprole 18.5% SC @ 0.3ml/L."},
+  "Club root": {symptoms:"Swollen, distorted roots and stunted, wilting plants, worse in acidic soil.", organic:"Improve drainage; raise soil pH with lime; rotate away from cabbage-family crops for 4+ years; use disease-free transplants.", chemical:"No reliable chemical cure; a pre-planting soil drench with a recommended fungicide can help suppress it in severe cases."},
+  "Cabbage worm": {symptoms:"Velvety green caterpillars leaving ragged holes in leaves, often near the developing head.", organic:"Hand-pick; Bt spray; row covers on young plants.", chemical:"Spinosad 45% SC @ 0.3ml/L."},
+  "Black rot": {symptoms:"V-shaped yellow lesions from leaf edges inward, blackened veins; can rot the head.", organic:"Use disease-free seed/transplants; remove and destroy infected debris; avoid overhead watering.", chemical:"Spray Copper oxychloride 3g/L or Streptocycline 0.5g/10L."},
+  "Fruit fly": {symptoms:"Puncture marks on fruit skin, maggots inside causing rot and premature fruit drop.", organic:"Methyl eugenol/cue-lure traps (5-6 per Guntha); bag young fruit; collect and destroy fallen fruit.", chemical:"Spray Malathion 50% EC @ 2ml/L, or use a Spinosad bait spray on the traps."},
+  "Red pumpkin beetle": {symptoms:"Orange-yellow beetles skeletonizing leaves of young seedlings; grubs damage roots underground.", organic:"Hand-pick beetles in early morning; dust seedlings with wood ash or neem cake.", chemical:"Spray Carbaryl 50% WP @ 3g/L or Malathion 50% EC @ 2ml/L."},
+  "Downy mildew": {symptoms:"Yellow angular patches on the upper leaf surface with grayish-purple fuzzy growth underneath, worse in humid weather.", organic:"Improve spacing/airflow; avoid overhead irrigation; remove infected leaves.", chemical:"Spray Metalaxyl + Mancozeb combination @ 2.5g/L or Copper oxychloride 3g/L."},
+  "Powdery mildew": {symptoms:"White powdery patches on leaves and stems; leaves yellow and dry out, common in dry-humid swings.", organic:"Spray wettable sulfur 3g/L, or a diluted milk spray (1 part milk to 9 parts water); improve air circulation.", chemical:"Spray Hexaconazole 5% SC @ 1ml/L or Dinocap 48% EC @ 1ml/L."},
+  "Purple blotch": {symptoms:"Small water-soaked purple-brown spots with pale centers on onion leaves, enlarging and girdling the leaf.", organic:"Avoid overhead irrigation; remove infected leaves; ensure good drainage.", chemical:"Spray Mancozeb 75% WP @ 2.5g/L or Chlorothalonil 75% WP @ 2g/L every 10 days."},
+  "Stemphylium blight": {symptoms:"Small yellow-brown spots on leaf tips that enlarge, drying out and blighting the tip; often seen with purple blotch.", organic:"Rotate crops; remove infected debris; avoid excess nitrogen.", chemical:"Spray Mancozeb 75% WP @ 2.5g/L or Iprodione @ 2g/L."},
+  "Damping off": {symptoms:"Seedlings collapse and rot right at the soil line soon after germination, usually in overwatered nursery beds.", organic:"Use a well-drained, sterilized nursery mix; avoid overwatering; treat seed with Trichoderma before sowing.", chemical:"Drench the nursery bed with Copper oxychloride 3g/L or Metalaxyl 2g/L."},
+  "Leaf miner": {symptoms:"White winding trails or tunnels visible on the leaf surface, caused by larvae feeding inside the leaf.", organic:"Remove and destroy affected leaves; yellow sticky traps; neem oil spray.", chemical:"Spray Cyantraniliprole 10.26% OD @ 1.2ml/L or Abamectin 1.9% EC @ 0.5ml/L."},
+  "Pod borer": {symptoms:"Round holes in pods with larvae feeding inside; hollowed or damaged seeds.", organic:"Pheromone traps; hand-pick affected pods; neem seed extract 5%.", chemical:"Spray Emamectin benzoate 5% SG @ 0.4g/L or Chlorantraniliprole 18.5% SC @ 0.3ml/L."},
+  "Bean fly": {symptoms:"Yellowing and wilting of young seedlings; swollen stem base with tunneling maggots inside.", organic:"Earth up the stem base to encourage secondary roots; remove and destroy badly affected seedlings.", chemical:"Treat seed with Imidacloprid 48% FS @ 5ml/kg seed before sowing."},
+  "Root fly": {symptoms:"Wilting tops with tunneled, rotting roots and maggots inside, common in carrots.", organic:"Rotate crops; use fine mesh row covers; avoid sowing right after a previous root crop.", chemical:"Drench soil with Chlorpyrifos 20% EC @ 2ml/L around the root zone."},
+  "Leaf blight": {symptoms:"Brown-black spots on leaves that enlarge and merge; leaves dry and die starting from the tips.", organic:"Remove infected debris; avoid overhead irrigation; keep good plant spacing.", chemical:"Spray Mancozeb 75% WP @ 2.5g/L or Chlorothalonil @ 2g/L."},
+  "Flea beetle": {symptoms:"Tiny black beetles leaving small shot-hole marks on leaves, worse on young seedlings.", organic:"Dust seedlings with wood ash or neem cake; use floating row covers.", chemical:"Spray Carbaryl 50% WP @ 3g/L."},
+  "Bacterial blight": {symptoms:"Water-soaked angular spots on leaves turning brown, sometimes oozing bacterial exudate in humid weather.", organic:"Use disease-free seed; avoid working in wet fields; remove infected debris.", chemical:"Spray Copper oxychloride 3g/L + Streptocycline 0.5g/10L."},
+  "Epilachna beetle": {symptoms:"Orange beetles and spiny yellow larvae skeletonizing leaves in a lace-like pattern.", organic:"Hand-pick beetles, larvae and egg clusters; neem oil spray.", chemical:"Spray Malathion 50% EC @ 2ml/L."},
+  "Leaf webber": {symptoms:"Leaves webbed together with silk; caterpillars feed hidden inside the folded leaves.", organic:"Hand-pick and destroy webbed leaves; neem oil spray; Bt spray.", chemical:"Spray Chlorantraniliprole 18.5% SC @ 0.3ml/L."},
+  "Hairy caterpillar": {symptoms:"Hairy caterpillars feeding in clusters, defoliating branches; common on drumstick trees.", organic:"Hand-pick and destroy egg masses and young clusters; neem oil spray.", chemical:"Spray Chlorpyrifos 20% EC @ 2.5ml/L or Quinalphos 25% EC @ 2ml/L."},
+  "Potato tuber moth": {symptoms:"Tunnels in tubers and leaves with silk webbing; tubers keep getting damaged in storage too.", organic:"Earth up well so tubers aren't exposed to egg-laying moths; harvest promptly; store cool and dark with dried neem leaves mixed in.", chemical:"Spray Chlorpyrifos 20% EC @ 2.5ml/L at planting and again at 30 days; dust stored tubers with neem powder."},
+  "Late blight": {symptoms:"Dark, water-soaked patches on leaves with white fungal growth underneath in cool humid weather, spreading fast; tubers develop reddish-brown rot.", organic:"Remove infected plants/debris promptly; avoid overhead irrigation; ensure good drainage and spacing.", chemical:"Spray Mancozeb 75% WP @ 2.5g/L preventively, or Metalaxyl + Mancozeb combination @ 2.5g/L once symptoms appear."},
+  "Cutworm": {symptoms:"Seedlings cut off at soil level overnight; fat caterpillars curl up and hide in the soil during the day.", organic:"Hand-pick cutworms from soil near damaged plants at dusk; use paper/cardboard collars around seedling stems.", chemical:"Drench soil near the base with Chlorpyrifos 20% EC @ 2.5ml/L."},
+  "Leaf curl virus": {symptoms:"Leaves curl and pucker, plant looks stunted and thickened; spread by whitefly.", organic:"Remove and destroy infected plants early; control the whitefly vector with yellow sticky traps and neem oil.", chemical:"Control whitefly with Imidacloprid 17.8% SL @ 0.3ml/L — the virus itself has no cure."}
+};
+
+/* ---------------- Marathi translations (for Nutrition, Fertilizer, Pesticide & Disease content) ---------------- */
+const STAGE_MR = {
+  "Basal (transplanting)":"बेसल डोस (पुनर्लागवडीच्या वेळी)", "Vegetative growth":"वाढीचा काळ", "Flowering":"फुलोरा",
+  "Fruit development":"फळ वाढीचा काळ", "Harvesting":"काढणी", "Pre-flowering":"फुलोऱ्यापूर्वी", "Fruit set":"फळधारणा",
+  "Basal (sowing)":"बेसल डोस (पेरणीच्या वेळी)", "Head formation":"गड्डा तयार होताना", "Pre-curd":"गड्डा तयार होण्यापूर्वी",
+  "Curd formation":"गड्डा तयार होताना", "Vine growth":"वेल वाढीचा काळ", "Bulb formation":"कांदा पोसण्याचा काळ",
+  "After first cutting":"पहिल्या कापणीनंतर", "After second cutting":"दुसऱ्या कापणीनंतर", "Root bulking":"मुळे पोसण्याचा काळ",
+  "Basal (planting)":"बेसल डोस (लागवडीच्या वेळी)", "Vine establishment":"वेल रुजल्यानंतर", "Continuous harvest":"सतत काढणी सुरू असताना",
+  "Tuber initiation":"कंद तयार होण्यास सुरुवात"
+};
+const INPUT_MR = {
+  "Well-rotted FYM":"चांगले कुजलेले शेणखत", "SSP (Single Super Phosphate)":"एसएसपी (सिंगल सुपर फॉस्फेट)", "MOP (Potash)":"एमओपी (पालाश खत)",
+  "Urea":"युरिया", "Calcium Nitrate":"कॅल्शियम नायट्रेट", "NPK 19:19:19":"एनपीके १९:१९:१९", "SSP":"एसएसपी",
+  "Urea + MOP":"युरिया + एमओपी", "Zinc Sulphate + Borax":"झिंक सल्फेट + बोरॅक्स", "FYM":"शेणखत",
+  "Borax":"बोरॅक्स", "MOP (Potash) + Sulphur":"एमओपी (पालाश) + गंधक", "FYM + Urea":"शेणखत + युरिया"
+};
+const METHOD_MR = {
+  "Mix into soil/pit before transplanting":"पुनर्लागवडीपूर्वी मातीत/खड्ड्यात मिसळा",
+  "Mix into soil before transplanting":"पुनर्लागवडीपूर्वी मातीत मिसळा",
+  "Top dressing near root zone, irrigate right after":"मुळांजवळ वरखत द्या, लगेच पाणी द्या",
+  "Top dressing, then earth up around the base":"वरखत द्या, नंतर बुंध्याभोवती भर द्या",
+  "Top dressing along with urea to help fruit set":"फळधारणेसाठी युरियासोबत वरखत द्या",
+  "Foliar spray – 5g/litre water, ~15L per Guntha, prevents blossom end rot":"पानांवर फवारणी – ५ ग्रॅम प्रति लिटर पाणी, प्रति गुंठा सुमारे १५ लिटर, फळ सड टाळण्यासाठी",
+  "Foliar spray – 5g/litre water, repeat every 15 days through harvest":"पानांवर फवारणी – ५ ग्रॅम प्रति लिटर पाणी, काढणीपर्यंत दर १५ दिवसांनी पुन्हा करा",
+  "Top dressing after transplant establishes, irrigate after":"रोप स्थिरावल्यानंतर वरखत द्या, नंतर पाणी द्या",
+  "Top dressing":"वरखत द्या",
+  "Top dressing along with urea":"युरियासोबत वरखत द्या",
+  "Light split top dressing every 20 days through harvest":"काढणीपर्यंत दर २० दिवसांनी हलके वरखत द्या",
+  "Top dressing after transplant, irrigate after":"पुनर्लागवडीनंतर वरखत द्या, नंतर पाणी द्या",
+  "Top dressing before flowering starts":"फुलोरा सुरू होण्यापूर्वी वरखत द्या",
+  "Foliar spray – Zinc 5g/L + Borax 1g/L, boosts fruit set":"पानांवर फवारणी – झिंक ५ ग्रॅम/लिटर + बोरॅक्स १ ग्रॅम/लिटर, फळधारणा वाढवण्यासाठी",
+  "Light split top dressing every 20 days through picking":"तोडणी सुरू असताना दर २० दिवसांनी हलके वरखत द्या",
+  "Mix into the furrow before sowing":"पेरणीपूर्वी सरीत मिसळा",
+  "Top dressing, irrigate right after":"वरखत द्या, लगेच पाणी द्या",
+  "Top dressing at flowering":"फुलोऱ्याच्या वेळी वरखत द्या",
+  "Light split dose every 10 days while picking":"तोडणी सुरू असताना दर १० दिवसांनी हलका डोस द्या",
+  "First top dressing after transplant establishes":"रोप स्थिरावल्यानंतर पहिले वरखत द्या",
+  "Second split for leafy growth":"पानांच्या वाढीसाठी दुसरा डोस",
+  "Top dressing for firm head development":"गड्डा घट्ट होण्यासाठी वरखत द्या",
+  "Top dressing after transplant establishes":"रोप स्थिरावल्यानंतर वरखत द्या",
+  "Foliar spray – 1g/litre water, prevents hollow stem/browning":"पानांवर फवारणी – १ ग्रॅम प्रति लिटर पाणी, देठ पोकळ/काळे पडणे टाळण्यासाठी",
+  "Top dressing for curd firmness":"गड्डा घट्ट राहण्यासाठी वरखत द्या",
+  "Mix into soil before sowing":"पेरणीपूर्वी मातीत मिसळा",
+  "Top dressing as vines spread, irrigate after":"वेल पसरताना वरखत द्या, नंतर पाणी द्या",
+  "Top dressing at flowering to aid fruit set":"फळधारणेसाठी फुलोऱ्याच्या वेळी वरखत द्या",
+  "Top dressing, irrigate after":"वरखत द्या, नंतर पाणी द्या",
+  "Second N split":"नत्राचा (युरियाचा) दुसरा डोस",
+  "Top dressing for bulb size and pungency":"कांद्याचा आकार व तिखटपणासाठी वरखत द्या",
+  "Light top dressing, keep soil consistently moist":"हलके वरखत द्या, जमीन सतत ओलसर ठेवा",
+  "Light top dressing before first cutting":"पहिल्या कापणीपूर्वी हलके वरखत द्या",
+  "Basal mix into soil before sowing":"पेरणीपूर्वी बेसल डोस म्हणून मातीत मिसळा",
+  "Top dressing to push regrowth":"पुन्हा फूट येण्यासाठी वरखत द्या",
+  "Mix into soil before sowing (treat seed with Rhizobium culture first)":"पेरणीपूर्वी मातीत मिसळा (आधी बियाण्याला रायझोबियम कल्चरची प्रक्रिया करा)",
+  "Mix into soil before sowing – keep N low, legume fixes its own nitrogen":"पेरणीपूर्वी मातीत मिसळा – नत्र कमी ठेवा, कडधान्य पीक स्वतः नत्र मिळवते",
+  "Top dressing before flowering to boost pod set":"शेंगा धरण्यासाठी फुलोऱ्यापूर्वी वरखत द्या",
+  "Top dressing before flowering":"फुलोऱ्यापूर्वी वरखत द्या",
+  "Foliar spray – 5g/litre water, prevents fruit blossom rot":"पानांवर फवारणी – ५ ग्रॅम प्रति लिटर पाणी, फळ सड टाळण्यासाठी",
+  "Mix into loose, well-drained soil before sowing":"पेरणीपूर्वी भुसभुशीत व पाण्याचा निचरा होणाऱ्या मातीत मिसळा",
+  "Mix into soil before sowing – keep N low to avoid root forking":"पेरणीपूर्वी मातीत मिसळा – मुळे दुभंगू नयेत म्हणून नत्र कमी ठेवा",
+  "Top dressing to support root development":"मुळांच्या वाढीसाठी वरखत द्या",
+  "Mix into soil before sowing – keep N low":"पेरणीपूर्वी मातीत मिसळा – नत्राचे प्रमाण कमी ठेवा",
+  "Light top dressing; keep soil consistently moist":"हलके वरखत द्या; जमीन सतत ओलसर ठेवा",
+  "Top dressing before flowering; staking helps pod quality":"फुलोऱ्यापूर्वी वरखत द्या; आधार दिल्यास शेंगांची प्रत सुधारते",
+  "Top dressing at flowering; set up trellis by day 20":"फुलोऱ्याच्या वेळी वरखत द्या; २० व्या दिवसापर्यंत मांडव/आधार उभारा",
+  "Top dressing, irrigate after; provide trellis/pandal for straight fruits":"वरखत द्या, नंतर पाणी द्या; फळे सरळ येण्यासाठी मांडव/आधार द्या",
+  "Mix into soil/pit before planting cuttings":"फांद्या लावण्यापूर्वी मातीत/खड्ड्यात मिसळा",
+  "Mix into soil before planting":"लागवडीपूर्वी मातीत मिसळा",
+  "Top dressing once vines start climbing; set up trellis/pandal":"वेल चढू लागल्यावर वरखत द्या; मांडव/आधार उभारा",
+  "Repeat every 30 days through the ongoing harvest, this is a perennial vine":"काढणी सुरू असेपर्यंत दर ३० दिवसांनी पुन्हा करा, हा बहुवर्षीय वेल आहे",
+  "Top dressing before flowering; provide staking/support":"फुलोऱ्यापूर्वी वरखत द्या; आधार द्या",
+  "Mix into pit before planting":"लागवडीपूर्वी खड्ड्यात मिसळा",
+  "Top dressing around the base, irrigate after":"बुंध्याभोवती वरखत द्या, नंतर पाणी द्या",
+  "Top dressing at flowering to help fruit set":"फळधारणेसाठी फुलोऱ्याच्या वेळी वरखत द्या",
+  "Mix into the furrow before planting seed tubers":"बियाणे कंद लावण्यापूर्वी सरीत मिसळा",
+  "Mix into the furrow before planting":"लागवडीपूर्वी सरीत मिसळा",
+  "Top dressing followed by first earthing up":"वरखत द्या, नंतर पहिली भर द्या",
+  "Top dressing followed by second earthing up":"वरखत द्या, नंतर दुसरी भर द्या"
+};
+const PEST_MR = {
+  "Early blight":{name:"लवकर येणारा करपा", symptoms:"जुन्या पानांवर आधी गोल तपकिरी ठिपके (वर्तुळाकार), पाने पिवळी पडून गळतात; खोड व फळांवरही पसरू शकतो.", organic:"बाधित खालची पाने काढून नष्ट करा; वरून पाणी देणे टाळा; मातीचे शिंतोडे पानांवर उडू नयेत म्हणून आच्छादन करा.", chemical:"मॅन्कोझेब ७५% डब्ल्यूपी @ २.५ ग्रॅम/लिटर किंवा क्लोरोथॅलोनिल @ २ ग्रॅम/लिटर, लक्षणे दिसताच दर १० दिवसांनी फवारा."},
+  "Aphids":{name:"मावा", symptoms:"नवीन फूट व पानांच्या खालच्या बाजूला लहान हिरवे/काळे किडे; पाने वाकडी होऊन चिकट होतात, कधी काळी बुरशी येते.", organic:"दर ७ दिवसांनी निंबोळी तेल ५ मिली/लिटर फवारा; साध्या पाण्याने किडे झटकून टाका; लेडीबर्ड भुंग्यांना प्रोत्साहन द्या.", chemical:"इमिडाक्लोप्रिड १७.८% एसएल @ ०.३ मिली/लिटर किंवा थायामेथोक्झाम २५% डब्ल्यूजी @ ०.३ ग्रॅम/लिटर, संध्याकाळी फवारा."},
+  "Whitefly":{name:"पांढरी माशी", symptoms:"पानांच्या खालच्या बाजूला लहान पांढरे उडणारे किडे; पाने पिवळी व चिकट होतात; विषाणूजन्य रोग पसरवते.", organic:"पिवळे चिकट सापळे (प्रति गुंठा १२-१५) लावा; दर ७ दिवसांनी निंबोळी तेल ५ मिली/लिटर फवारा.", chemical:"डायाफेन्थियुरॉन ५०% डब्ल्यूपी @ १ ग्रॅम/लिटर किंवा इमिडाक्लोप्रिड १७.८% एसएल @ ०.३ मिली/लिटर."},
+  "Thrips":{name:"फुलकिडे", symptoms:"पाने व फुलांवर चंदेरी रेषा व ठिपके; पाने वाकडी व विकृत होतात; विषाणूजन्य रोग पसरवतात.", organic:"निळे चिकट सापळे लावा; निंबोळी तेल ५ मिली/लिटर फवारा.", chemical:"फिप्रोनिल ५% एससी @ २ मिली/लिटर किंवा स्पिनोसॅड ४५% एससी @ ०.३ मिली/लिटर."},
+  "Mites":{name:"कोळी (माइट्स)", symptoms:"पानांच्या खालच्या बाजूला बारीक जाळे, पाने तांबूस/पिवळी पडतात; उष्ण-कोरड्या हवामानात पाने वाकडी होऊन वाळतात.", organic:"पानांच्या खालच्या बाजूला पाणी फवारून आर्द्रता वाढवा; गंधक ३ ग्रॅम/लिटर फवारा.", chemical:"प्रोपरगाइट ५७% ईसी @ २ मिली/लिटर किंवा फेनाझाक्विन १०% ईसी @ १ मिली/लिटर."},
+  "Fruit borer":{name:"फळ पोखरणारी अळी", symptoms:"फळांवर गोल छिद्रे व आत विष्ठा दिसते; अळी आत राहून खाते; बाधित फळ लवकर गळते.", organic:"एकरी ८ फेरोमोन सापळे लावा; बाधित फळे तोडून नष्ट करा; निंबोळी बीज अर्क ५% फवारा.", chemical:"इमामेक्टिन बेन्झोएट ५% एसजी @ ०.४ ग्रॅम/लिटर किंवा क्लोरँट्रानिलीप्रोल १८.५% एससी @ ०.३ मिली/लिटर."},
+  "Shoot & fruit borer":{name:"शेंडा व फळ पोखरणारी अळी", symptoms:"शेंडे कोमेजून वाळतात; फळांना छिद्रे पडून आत विष्ठा दिसते.", organic:"बाधित शेंडे/फळे नियमित कापून नष्ट करा; फेरोमोन सापळे लावा.", chemical:"इमामेक्टिन बेन्झोएट ५% एसजी @ ०.४ ग्रॅम/लिटर किंवा सायपरमेथ्रिन २५% ईसी @ १ मिली/लिटर."},
+  "Jassids":{name:"तुडतुडे", symptoms:"पानांच्या कडा पिवळ्या-तपकिरी होऊन करपल्यासारख्या दिसतात, पाने वाकडी होतात, वाढ खुंटते.", organic:"निंबोळी तेल फवारा; पिवळे चिकट सापळे लावा.", chemical:"इमिडाक्लोप्रिड १७.८% एसएल @ ०.३ मिली/लिटर."},
+  "Bacterial wilt":{name:"जीवाणूजन्य मर रोग", symptoms:"जमिनीत ओलावा असूनही अचानक संपूर्ण झाड कोमेजते; खोड कापून पाण्यात ठेवल्यास पांढरा जीवाणूंचा धागा दिसतो.", organic:"बाधित झाडे लगेच उपटून जाळून नष्ट करा; २-३ वर्षे वेगळ्या पिकांची फेरपालट करा; पाणी साचू देऊ नका.", chemical:"प्रतिबंधासाठी मुळांजवळ कॉपर ऑक्सिक्लोराईड ३ ग्रॅम/लिटर + स्ट्रेप्टोसायक्लिन ०.५ ग्रॅम प्रति १० लिटर द्रावण द्या; झाड बाधित झाल्यावर उपचार नाही."},
+  "Fruit rot / anthracnose":{name:"फळ सड / अँथ्रॅक्नोज", symptoms:"फळांवर खोलगट, ओलसर गडद ठिपके, वर्तुळाकार वाढत जाऊन फळ सडते.", organic:"बाधित फळे काढून नष्ट करा; वरून पाणी देणे टाळा; हवा खेळती राहण्यासाठी अंतर ठेवा.", chemical:"कार्बेन्डाझिम ५०% डब्ल्यूपी @ १ ग्रॅम/लिटर किंवा कॉपर ऑक्सिक्लोराईड ३ ग्रॅम/लिटर, दर १० दिवसांनी फवारा."},
+  "Fruit rot":{name:"फळ सड", symptoms:"फळांवर खोलगट, ओलसर गडद ठिपके, वर्तुळाकार वाढत जाऊन फळ सडते.", organic:"बाधित फळे काढून नष्ट करा; वरून पाणी देणे टाळा; हवा खेळती राहण्यासाठी अंतर ठेवा.", chemical:"कार्बेन्डाझिम ५०% डब्ल्यूपी @ १ ग्रॅम/लिटर किंवा कॉपर ऑक्सिक्लोराईड ३ ग्रॅम/लिटर, दर १० दिवसांनी फवारा."},
+  "YVMV virus":{name:"पिवळा शिरा विषाणू (YVMV)", symptoms:"पानांवर पिवळ्या शिरांचे जाळे, झाड खुंटलेले, फळ लहान व फिकट; पांढऱ्या माशीमार्फत पसरतो.", organic:"बाधित झाडे लवकर उपटून नष्ट करा; पांढरी माशी नियंत्रित करा; सहनशील जात वापरा.", chemical:"पांढरी माशी नियंत्रणासाठी इमिडाक्लोप्रिड १७.८% एसएल @ ०.३ मिली/लिटर वापरा — विषाणूवर स्वतः औषध नाही."},
+  "Diamondback moth":{name:"डायमंडबॅक पतंग", symptoms:"लहान हिरव्या अळ्या पानांना खिडकीसारखी छिद्रे पाडतात किंवा पान खरडून खातात, मुख्यतः कोबीवर्गीय पिकांवर.", organic:"फेरोमोन सापळे लावा; बीटी (Bacillus thuringiensis) २ ग्रॅम/लिटर फवारा; निंबोळी तेल वापरा.", chemical:"स्पिनोसॅड ४५% एससी @ ०.३ मिली/लिटर — प्रतिकारशक्ती टाळण्यासाठी औषध बदलत राहा."},
+  "Cabbage looper":{name:"कोबी लूपर अळी", symptoms:"हिरव्या अळ्या चालताना वाकड्या होतात, पानांना मोठी अनियमित छिद्रे पाडतात.", organic:"अळ्या हाताने वेचून नष्ट करा; बीटी फवारा; निंबोळी तेल वापरा.", chemical:"क्लोरँट्रानिलीप्रोल १८.५% एससी @ ०.३ मिली/लिटर."},
+  "Club root":{name:"गाठ मूळ रोग", symptoms:"मुळे फुगून विकृत होतात, झाड खुंटून कोमेजते, आम्लयुक्त जमिनीत जास्त प्रमाण.", organic:"पाण्याचा निचरा सुधारा; चुना टाकून जमिनीचा सामू वाढवा; ४+ वर्षे कोबीवर्गीय पिके टाळून फेरपालट करा; निरोगी रोपे वापरा.", chemical:"विश्वासार्ह रासायनिक उपाय नाही; गंभीर प्रादुर्भावात लागवडीपूर्वी शिफारशीत बुरशीनाशकाचा जमिनीत ड्रेंच फायदेशीर ठरू शकतो."},
+  "Cabbage worm":{name:"कोबी अळी", symptoms:"मखमली हिरव्या अळ्या पानांना, विशेषतः गड्ड्याजवळ, अनियमित छिद्रे पाडतात.", organic:"हाताने वेचा; बीटी फवारा; लहान रोपांवर आच्छादन वापरा.", chemical:"स्पिनोसॅड ४५% एससी @ ०.३ मिली/लिटर."},
+  "Black rot":{name:"काळी सड", symptoms:"पानांच्या कडेपासून V आकाराचे पिवळे डाग, शिरा काळ्या पडतात; गड्डा सडू शकतो.", organic:"रोगमुक्त बियाणे/रोपे वापरा; बाधित काडीकचरा काढून नष्ट करा; वरून पाणी देणे टाळा.", chemical:"कॉपर ऑक्सिक्लोराईड ३ ग्रॅम/लिटर किंवा स्ट्रेप्टोसायक्लिन ०.५ ग्रॅम प्रति १० लिटर फवारा."},
+  "Fruit fly":{name:"फळमाशी", symptoms:"फळांच्या सालीवर टोचल्यासारखे डाग, आत अळ्या असल्याने फळ सडते व अकाली गळते.", organic:"मिथाइल युजेनॉल/क्यू-ल्यूर सापळे (प्रति गुंठा ५-६) लावा; कोवळी फळे पिशवीत गुंडाळा; गळलेली फळे गोळा करून नष्ट करा.", chemical:"मॅलॅथिऑन ५०% ईसी @ २ मिली/लिटर फवारा, किंवा सापळ्यांवर स्पिनोसॅड आमिष फवारणी वापरा."},
+  "Red pumpkin beetle":{name:"लाल भोपळा भुंगा", symptoms:"केशरी-पिवळे भुंगे कोवळ्या रोपांची पाने खरडून खातात; अळ्या जमिनीत मुळांना इजा करतात.", organic:"सकाळी लवकर भुंगे हाताने वेचा; रोपांवर राख किंवा निंबोळी पेंड टाका.", chemical:"कार्बारिल ५०% डब्ल्यूपी @ ३ ग्रॅम/लिटर किंवा मॅलॅथिऑन ५०% ईसी @ २ मिली/लिटर फवारा."},
+  "Downy mildew":{name:"केवडा रोग", symptoms:"पानांच्या वरच्या बाजूला पिवळे कोनीय ठिपके, खालच्या बाजूला राखाडी-जांभळी बुरशी; दमट हवामानात जास्त.", organic:"रोपांमध्ये योग्य अंतर/हवा खेळती ठेवा; वरून पाणी देणे टाळा; बाधित पाने काढा.", chemical:"मेटालॅक्झिल + मॅन्कोझेब मिश्रण @ २.५ ग्रॅम/लिटर किंवा कॉपर ऑक्सिक्लोराईड ३ ग्रॅम/लिटर फवारा."},
+  "Powdery mildew":{name:"भुरी रोग", symptoms:"पाने व खोडावर पांढरी भुकटीसारखी बुरशी, पाने पिवळी पडून वाळतात; कोरड्या-दमट हवामानात जास्त.", organic:"गंधक ३ ग्रॅम/लिटर किंवा पातळ दूध (१ भाग दूध : ९ भाग पाणी) फवारा; हवा खेळती ठेवा.", chemical:"हेक्झाकोनॅझोल ५% एससी @ १ मिली/लिटर किंवा डायनोकॅप ४८% ईसी @ १ मिली/लिटर."},
+  "Purple blotch":{name:"जांभळा करपा", symptoms:"कांद्याच्या पानांवर लहान ओलसर जांभळे-तपकिरी ठिपके, पांढऱ्या मध्यभागासह, वाढून पान वेढतात.", organic:"वरून पाणी देणे टाळा; बाधित पाने काढा; पाण्याचा चांगला निचरा ठेवा.", chemical:"मॅन्कोझेब ७५% डब्ल्यूपी @ २.५ ग्रॅम/लिटर किंवा क्लोरोथॅलोनिल ७५% डब्ल्यूपी @ २ ग्रॅम/लिटर, दर १० दिवसांनी फवारा."},
+  "Stemphylium blight":{name:"स्टेम्फिलियम करपा", symptoms:"पानांच्या टोकावर लहान पिवळे-तपकिरी ठिपके वाढून टोक वाळते; बहुधा जांभळ्या करप्यासोबत दिसतो.", organic:"पीक फेरपालट करा; बाधित काडीकचरा काढा; जास्त नत्र देणे टाळा.", chemical:"मॅन्कोझेब ७५% डब्ल्यूपी @ २.५ ग्रॅम/लिटर किंवा आयप्रोडिओन @ २ ग्रॅम/लिटर फवारा."},
+  "Damping off":{name:"रोपे कुजणे", symptoms:"उगवणीनंतर लगेच रोपे जमिनीलगत कोसळून कुजतात, बहुधा जास्त पाणी दिलेल्या रोपवाटिकेत.", organic:"चांगला निचरा होणारे, निर्जंतुक रोपवाटिका माध्यम वापरा; जास्त पाणी देऊ नका; पेरणीपूर्वी बियाण्याला ट्रायकोडर्माची प्रक्रिया करा.", chemical:"रोपवाटिकेत कॉपर ऑक्सिक्लोराईड ३ ग्रॅम/लिटर किंवा मेटालॅक्झिल २ ग्रॅम/लिटर याचा ड्रेंच द्या."},
+  "Leaf miner":{name:"पान पोखरणारी अळी", symptoms:"पानाच्या आत अळी खात असल्याने पानावर पांढऱ्या नागमोडी रेषा/बोगदे दिसतात.", organic:"बाधित पाने काढून नष्ट करा; पिवळे चिकट सापळे लावा; निंबोळी तेल फवारा.", chemical:"सायअँट्रानिलीप्रोल १०.२६% ओडी @ १.२ मिली/लिटर किंवा अबामेक्टिन १.९% ईसी @ ०.५ मिली/लिटर."},
+  "Pod borer":{name:"शेंगा पोखरणारी अळी", symptoms:"शेंगांना गोल छिद्रे पडून आत अळी दिसते; बिया पोखरलेल्या/खराब होतात.", organic:"फेरोमोन सापळे लावा; बाधित शेंगा हाताने वेचा; निंबोळी बीज अर्क ५% फवारा.", chemical:"इमामेक्टिन बेन्झोएट ५% एसजी @ ०.४ ग्रॅम/लिटर किंवा क्लोरँट्रानिलीप्रोल १८.५% एससी @ ०.३ मिली/लिटर."},
+  "Bean fly":{name:"शेंगा माशी", symptoms:"कोवळी रोपे पिवळी पडून कोमेजतात; खोडाच्या तळाशी फुगवटा येऊन आत आळ्या पोखरतात.", organic:"मुळांच्या वाढीसाठी बुंध्याजवळ भर द्या; जास्त बाधित रोपे काढून नष्ट करा.", chemical:"पेरणीपूर्वी बियाण्याला इमिडाक्लोप्रिड ४८% एफएस @ ५ मिली/किलो बियाणे प्रक्रिया करा."},
+  "Root fly":{name:"मूळ माशी", symptoms:"वरचा भाग कोमेजतो, मुळे पोखरलेली/सडलेली दिसतात व आत आळ्या असतात, विशेषतः गाजरात.", organic:"पीक फेरपालट करा; बारीक जाळीचे आच्छादन वापरा; आधीच्या मूळ पिकानंतर लगेच पेरणी टाळा.", chemical:"मुळांभोवती क्लोरपायरिफॉस २०% ईसी @ २ मिली/लिटर याचा ड्रेंच द्या."},
+  "Leaf blight":{name:"पानांवरील करपा", symptoms:"पानांवर तपकिरी-काळे ठिपके वाढून एकत्र येतात; पाने टोकाकडून वाळून मरतात.", organic:"बाधित काडीकचरा काढा; वरून पाणी देणे टाळा; योग्य अंतर ठेवा.", chemical:"मॅन्कोझेब ७५% डब्ल्यूपी @ २.५ ग्रॅम/लिटर किंवा क्लोरोथॅलोनिल @ २ ग्रॅम/लिटर फवारा."},
+  "Flea beetle":{name:"पिसू भुंगा", symptoms:"लहान काळे भुंगे पानांवर बारीक छिद्रे करतात, कोवळ्या रोपांवर जास्त परिणाम.", organic:"रोपांवर राख किंवा निंबोळी पेंड टाका; फ्लोटिंग रो कव्हर वापरा.", chemical:"कार्बारिल ५०% डब्ल्यूपी @ ३ ग्रॅम/लिटर फवारा."},
+  "Bacterial blight":{name:"जीवाणूजन्य करपा", symptoms:"पानांवर कोनीय, ओलसर डाग तपकिरी होतात, दमट हवामानात जीवाणूंचा स्राव बाहेर येऊ शकतो.", organic:"रोगमुक्त बियाणे वापरा; ओल्या शेतात काम करणे टाळा; बाधित काडीकचरा काढा.", chemical:"कॉपर ऑक्सिक्लोराईड ३ ग्रॅम/लिटर + स्ट्रेप्टोसायक्लिन ०.५ ग्रॅम प्रति १० लिटर फवारा."},
+  "Epilachna beetle":{name:"एपिलाक्ना भुंगा", symptoms:"केशरी भुंगे व काटेरी अळ्या पाने जाळीसारखी खरडून खातात.", organic:"भुंगे, अळ्या व अंड्यांचे पुंजके हाताने वेचा; निंबोळी तेल फवारा.", chemical:"मॅलॅथिऑन ५०% ईसी @ २ मिली/लिटर फवारा."},
+  "Leaf webber":{name:"पाने जाळ्यात गुंडाळणारी अळी", symptoms:"पाने रेशमी जाळ्याने एकत्र चिकटवली जातात; अळी गुंडाळलेल्या पानांच्या आत लपून खाते.", organic:"जाळे केलेली पाने हाताने काढून नष्ट करा; निंबोळी तेल व बीटी फवारा.", chemical:"क्लोरँट्रानिलीप्रोल १८.५% एससी @ ०.३ मिली/लिटर फवारा."},
+  "Hairy caterpillar":{name:"केसाळ अळी", symptoms:"केसाळ अळ्या घोळक्याने पाने खाऊन फांद्या उघड्या करतात; शेवगा झाडांवर सामान्यपणे दिसते.", organic:"अंड्यांचे पुंजके व लहान घोळके हाताने वेचून नष्ट करा; निंबोळी तेल फवारा.", chemical:"क्लोरपायरिफॉस २०% ईसी @ २.५ मिली/लिटर किंवा क्विनालफॉस २५% ईसी @ २ मिली/लिटर फवारा."},
+  "Potato tuber moth":{name:"बटाटा कंद पतंग", symptoms:"कंद व पानांमध्ये बोगदे व रेशमी जाळे; साठवणीतही कंदांचे नुकसान होत राहते.", organic:"कंद उघडे राहू नयेत म्हणून व्यवस्थित भर द्या; वेळेवर काढणी करा; साठवणुकीत वाळलेल्या निंबोळी पानांसह थंड-अंधाऱ्या जागी ठेवा.", chemical:"लागवडीच्या वेळी व ३० दिवसांनी क्लोरपायरिफॉस २०% ईसी @ २.५ मिली/लिटर फवारा; साठवलेल्या कंदांवर निंबोळी भुकटी टाका."},
+  "Late blight":{name:"उशिरा येणारा करपा", symptoms:"थंड-दमट हवामानात पानांवर गडद ओलसर डाग व खाली पांढरी बुरशी, वेगाने पसरून झाड मरते; कंदांवर तपकिरी-लाल सड येते.", organic:"बाधित झाडे/काडीकचरा लगेच काढा; वरून पाणी देणे टाळा; चांगला निचरा व अंतर ठेवा.", chemical:"प्रतिबंधासाठी मॅन्कोझेब ७५% डब्ल्यूपी @ २.५ ग्रॅम/लिटर फवारा, किंवा लक्षणे दिसल्यावर मेटालॅक्झिल + मॅन्कोझेब मिश्रण @ २.५ ग्रॅम/लिटर वापरा."},
+  "Cutworm":{name:"जमिनीतील कटवर्म अळी", symptoms:"रात्री रोपे जमिनीलगत कापली जातात; जाड अळ्या दिवसा जमिनीत गोल वळून लपून बसतात.", organic:"संध्याकाळी बाधित रोपांजवळ अळ्या हाताने वेचा; रोपांभोवती कागद/पुठ्ठ्याचे कॉलर लावा.", chemical:"बुंध्याजवळ क्लोरपायरिफॉस २०% ईसी @ २.५ मिली/लिटर याचा ड्रेंच द्या."},
+  "Leaf curl virus":{name:"पानांचा गोंडाळ विषाणू", symptoms:"पाने वळून चुरगळतात, झाड जाड-खुंटलेले दिसते; पांढऱ्या माशीमार्फत पसरतो.", organic:"बाधित झाडे लवकर उपटून नष्ट करा; पिवळे चिकट सापळे व निंबोळी तेलाने पांढरी माशी नियंत्रित करा.", chemical:"पांढरी माशी नियंत्रणासाठी इमिडाक्लोप्रिड १७.८% एसएल @ ०.३ मिली/लिटर वापरा — विषाणूवर स्वतः औषध नाही."}
+};
+const VACC_MR = [
+  {name:"मारेक्स रोग लस", method:"सहसा हॅचरीमध्येच पहिल्या दिवशी दिली जाते — पिल्ले पुरवठादाराकडे खात्री करा", note:"मारेक्स रोगापासून संरक्षण देते; पिल्ले आणण्यापूर्वीच जवळजवळ नेहमी दिलेली असते"},
+  {name:"लासोटा (आर.डी.) – पहिला डोस", method:"डोळ्यात थेंब किंवा पिण्याच्या पाण्यातून द्या (लस टिकण्यासाठी पाण्यात स्किम मिल्क पावडर मिसळा)", note:"राणीखेत (न्यूकॅसल) रोगापासून संरक्षण देते"},
+  {name:"गम्बोरो (आयबीडी) – पहिला डोस", method:"डोळ्यात थेंब किंवा पिण्याच्या पाण्यातून द्या", note:"इन्फेक्शियस बर्सल डिसीजपासून संरक्षण देते"},
+  {name:"गम्बोरो (आयबीडी) – बूस्टर डोस", method:"डोळ्यात थेंब किंवा पिण्याच्या पाण्यातून द्या", note:"अधिक प्रतिकारशक्तीसाठी बूस्टर डोस"},
+  {name:"लासोटा (आर.डी.) – बूस्टर डोस", method:"पिण्याच्या पाण्यातून द्या", note:"राणीखेत बूस्टर पुन्हा द्या"},
+  {name:"फाऊल पॉक्स लस (देवी लस)", method:"विंग-वेब स्टॅब पद्धतीने (पंखाच्या त्वचेत टोचून) द्या", note:"फाऊल पॉक्सपासून संरक्षण देते, पावसाळा/हिवाळ्यापूर्वी महत्त्वाचे"},
+  {name:"जंतनाशक (कृमिनाशक) औषध", method:"तोंडावाटे – अल्बेंडाझोल किंवा फेनबेंडाझोल, लेबलवरील प्रमाणानुसार", note:"यापुढे दर ३ महिन्यांनी पुन्हा जंतनाशक द्या"},
+  {name:"आरडी (आर२बी) बूस्टर", method:"पिण्याच्या पाण्यातून किंवा इंजेक्शनद्वारे द्या", note:"अंडी देण्यापूर्वी प्रौढ पक्ष्यांसाठी बूस्टर डोस"}
+];
+function trStage(s){ return (ui.lang==='mr' && STAGE_MR[s]) ? STAGE_MR[s] : s; }
+function trInput(s){ return (ui.lang==='mr' && INPUT_MR[s]) ? `${INPUT_MR[s]} (${s})` : s; }
+function trMethod(s){ return (ui.lang==='mr' && METHOD_MR[s]) ? METHOD_MR[s] : s; }
+function trPestName(key){ return (ui.lang==='mr' && PEST_MR[key]) ? `${PEST_MR[key].name} (${key})` : key; }
+function trPestField(key, field){ return (ui.lang==='mr' && PEST_MR[key]) ? PEST_MR[key][field] : null; }
+function langToggleHTML(){
+  return `<div class="mini-row" style="margin-bottom:8px;">
+    <button class="btn ${ui.lang==='mr'?'btn-primary':'btn-outline'} btn-sm" onclick="ui.lang='mr';render();">मराठी</button>
+    <button class="btn ${ui.lang==='en'?'btn-primary':'btn-outline'} btn-sm" onclick="ui.lang='en';render();">English</button>
+  </div>`;
+}
+const VEG_NAMES = Object.keys(CROP_DB);
+const MAINT_TYPES = ["Watering / Irrigation","Weeding","Staking / Support","Pruning / Training","Mulching","Land Preparation","Harvesting Labour","Other"];
+const NUT_TYPES = ["Fertilizer / Nutrition","Pesticide","Fungicide","Bio / Organic Input","Micronutrient Spray"];
+const EXP_CATS = ["Seeds / Saplings","Fertilizer","Pesticide / Medicine","Labour","Irrigation / Electricity","Equipment / Tools","Transport","Land Prep / Machinery","Other"];
+
+/* ---------------- Desi Chicken / Poultry data ---------------- */
+const POULTRY_BREEDS = ["Desi / Gavthi","Kadaknath","Giriraj","Vanaraja","Grampriya","Kuroiler","Aseel","Other / Mixed"];
+const POULTRY_EXP_CATS = ["Chicks / Birds Purchase","Feed","Medicine / Vaccination","Housing / Shed","Labour","Electricity / Water","Equipment","Transport","Other"];
+const POULTRY_SALE_TYPES = ["Eggs","Live Birds","Dressed / Meat Birds","Manure"];
+// Generic desi-chicken vaccination & deworming schedule, day counted from date of chick acquisition (day-old chicks)
+const VACCINATION_SCHEDULE = [
+  {day:0, name:"Marek's Disease vaccine", method:"Usually given at the hatchery on day 1 — confirm with your chick supplier", note:"Protects against Marek's disease; almost always pre-given before you collect chicks"},
+  {day:6, name:"Lasota (ND) – 1st dose", method:"Eye drop or drinking water (add skim milk powder to the water to protect the vaccine)", note:"Protects against Ranikhet / Newcastle disease"},
+  {day:14, name:"Gumboro (IBD) – 1st dose", method:"Eye drop or drinking water", note:"Protects against Infectious Bursal Disease"},
+  {day:21, name:"Gumboro (IBD) – booster", method:"Eye drop or drinking water", note:"Booster dose for stronger immunity"},
+  {day:28, name:"Lasota (ND) – booster", method:"Drinking water", note:"Repeat Ranikhet booster"},
+  {day:40, name:"Fowl Pox vaccine", method:"Wing-web stab method", note:"Protects against fowl pox, important before monsoon/winter"},
+  {day:60, name:"Deworming", method:"Oral – Albendazole or Fenbendazole as per label dose", note:"Repeat deworming every 3 months going forward"},
+  {day:90, name:"ND (R2B) booster", method:"Drinking water or injection", note:"Adult booster before egg-laying starts"}
+];
+
+/* ---------------- State ---------------- */
+let S = {
+  settings:{farmName:"My Vegetable Farm", village:"", taluka:"Karad", district:"Satara", totalGuntha:30},
+  plots:[], nutrition:[], maintenance:[], sales:[], expenses:[],
+  batches:[], eggLogs:[], poultryHealth:[], poultrySales:[], poultryExpenses:[]
+};
+let currentTab = "home";
+let ui = { showPlotForm:false, editPlotId:null, showNutForm:false, showMaintForm:false, showSaleForm:false, showExpForm:false,
+  nutFilterPlot:"all", maintFilterPlot:"all", saleFilterPlot:"all", plotForCalendarFilter:"all", nutPrefill:null, pestSearch:"",
+  poultrySubTab:"batches", showBatchForm:false, editBatchId:null, batchFilter:"all",
+  showEggForm:false, showHealthForm:false, healthPrefill:null, showPoultrySaleForm:false, showPoultryExpForm:false,
+  lang:"mr" };
+
+/* ---------------- Storage helpers ----------------
+   FIREBASE SETUP REQUIRED — this file is hosted outside Claude.ai (on Vercel/GitHub),
+   so it needs its own cloud database to actually save data and share it across devices.
+   1. Go to https://console.firebase.google.com → Create a project (free)
+   2. In the project, open "Build → Realtime Database" → Create Database → start in TEST mode
+   3. Open Project settings (gear icon) → General → scroll to "Your apps" → Add app → Web (</>)
+   4. Copy the firebaseConfig object it gives you and paste it below, replacing FIREBASE_CONFIG.
+   5. Commit + push to GitHub — Vercel will redeploy automatically.
+   Until you do this, the app falls back to saving in this browser only (not shared, not
+   visible to others, and lost if you clear browser data) — the banner in the app will tell you.
+------------------------------------------------------------------------------------------- */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCuXVMEU5xtQZZWl7VX4m_tYZcaKe70eqI",
+  authDomain: "safal-c2386.firebaseapp.com",
+  databaseURL: "https://safal-c2386-default-rtdb.firebaseio.com", // ⚠️ verify this against Firebase Console → Realtime Database (differs if you picked a non-default region)
+  projectId: "safal-c2386",
+  storageBucket: "safal-c2386.firebasestorage.app",
+  messagingSenderId: "588229590991",
+  appId: "1:588229590991:web:f454d79886a365bc7b1cba",
+  measurementId: "G-6CVE74TGQ8"
+};
+const DB_ROOT = "karad-farm-crm"; // change this if you ever host more than one farm off the same Firebase project
+const STORE_KEYS = ['farm-settings','plots','nutrition-logs','maintenance-logs','market-sales','expenses','poultry-batches','egg-logs','poultry-health-logs','poultry-sales','poultry-expenses'];
+let fbDb = null;
+let cloudConnected = false;
+(function initFirebase(){
+  try{
+    if(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY" && window.firebase){
+      firebase.initializeApp(FIREBASE_CONFIG);
+      fbDb = firebase.database();
+      cloudConnected = true;
+    }
+  }catch(e){ console.error("Firebase init failed", e); cloudConnected = false; }
+})();
+
+async function loadKey(key, fallback){
+  if(cloudConnected){
+    try{
+      const snap = await fbDb.ref(`${DB_ROOT}/${key}`).once('value');
+      const v = snap.val();
+      return v!==null && v!==undefined ? v : fallback;
+    }catch(e){ console.error("cloud load failed", key, e); }
+  }
+  try{
+    const local = localStorage.getItem(`${DB_ROOT}:${key}`);
+    return local ? JSON.parse(local) : fallback;
+  }catch(e){ return fallback; }
+}
+async function saveKey(key, value){
+  // Always keep a local copy immediately so the UI never waits on network
+  try{ localStorage.setItem(`${DB_ROOT}:${key}`, JSON.stringify(value)); }catch(e){}
+  if(cloudConnected){
+    try{ await fbDb.ref(`${DB_ROOT}/${key}`).set(value); }
+    catch(e){ console.error("cloud save failed", key, e); showToast("⚠️ Saved on this device only — cloud sync failed."); }
+  }
+}
+async function loadAll(){
+  const [settings, plots, nutrition, maintenance, sales, expenses, batches, eggLogs, poultryHealth, poultrySales, poultryExpenses] = await Promise.all([
+    loadKey('farm-settings', S.settings),
+    loadKey('plots', []),
+    loadKey('nutrition-logs', []),
+    loadKey('maintenance-logs', []),
+    loadKey('market-sales', []),
+    loadKey('expenses', []),
+    loadKey('poultry-batches', []),
+    loadKey('egg-logs', []),
+    loadKey('poultry-health-logs', []),
+    loadKey('poultry-sales', []),
+    loadKey('poultry-expenses', [])
+  ]);
+  S = {settings, plots, nutrition, maintenance, sales, expenses, batches, eggLogs, poultryHealth, poultrySales, poultryExpenses};
+}
+// Live sync: if someone else (or another device) saves, pull their change in and re-render.
+const KEY_TO_STATE = {'farm-settings':'settings','plots':'plots','nutrition-logs':'nutrition','maintenance-logs':'maintenance','market-sales':'sales','expenses':'expenses',
+  'poultry-batches':'batches','egg-logs':'eggLogs','poultry-health-logs':'poultryHealth','poultry-sales':'poultrySales','poultry-expenses':'poultryExpenses'};
+function attachLiveSync(){
+  if(!cloudConnected) return;
+  STORE_KEYS.forEach(key=>{
+    fbDb.ref(`${DB_ROOT}/${key}`).on('value', snap=>{
+      const v = snap.val();
+      const stateField = KEY_TO_STATE[key];
+      const incoming = v!==null && v!==undefined ? v : (stateField==='settings'? S.settings : []);
+      if(JSON.stringify(S[stateField]) !== JSON.stringify(incoming)){
+        S[stateField] = incoming;
+        try{ localStorage.setItem(`${DB_ROOT}:${key}`, JSON.stringify(incoming)); }catch(e){}
+        render();
+      }
+    });
+  });
+}
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(d){ if(!d) return "-"; const dt=new Date(d+"T00:00:00"); return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
+function daysBetween(a,b){ return Math.round((new Date(b+"T00:00:00") - new Date(a+"T00:00:00"))/86400000); }
+function addDays(d,n){ const dt=new Date(d+"T00:00:00"); dt.setDate(dt.getDate()+n); return dt.toISOString().slice(0,10); }
+function money(n){ return "₹"+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:0}); }
+function esc(s){ return (s||"").toString().replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+let toastTimer=null;
+function showToast(msg){
+  let t = document.querySelector('.toast');
+  if(!t){ t=document.createElement('div'); t.className='toast'; document.getElementById('app').appendChild(t); }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ---------------- Crop stage computation ---------------- */
+function getPlotProgress(plot){
+  const crop = CROP_DB[plot.vegetable];
+  if(!crop) return null;
+  const elapsed = daysBetween(plot.sowingDate, todayStr());
+  const duration = crop.duration;
+  const pct = Math.max(0, Math.min(100, Math.round((elapsed/duration)*100)));
+  let stageIdx = 0;
+  for(let i=0;i<crop.stages.length;i++){ if(elapsed >= crop.stages[i][1]) stageIdx = i; }
+  const stageName = crop.stages[stageIdx][0];
+  let nextStage = crop.stages[stageIdx+1] || null;
+  const harvestEndDate = addDays(plot.sowingDate, duration);
+  return {elapsed, duration, pct, stageName, nextStage, harvestEndDate, crop};
+}
+
+/* ---------------- Rendering ---------------- */
+function render(){
+  const app = document.getElementById('app');
+  app.innerHTML = renderHeader() + '<main id="content">' + renderTab() + '</main>' + renderNav();
+  attachGlobalHandlers();
+}
+function renderHeader(){
+  const totalPlotted = S.plots.reduce((a,p)=>a+Number(p.area||0),0);
+  return `<header class="top">
+    <div class="row-between">
+      <div class="eyebrow dv">${esc(S.settings.taluka)} तालुका · ${esc(S.settings.district)} जिल्हा</div>
+      <div style="font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:${cloudConnected?'rgba(255,255,255,0.22)':'rgba(226,74,59,0.35)'};white-space:nowrap;">${cloudConnected?'☁️ Synced':'📵 Local only'}</div>
+    </div>
+    <h1>${esc(S.settings.farmName)}</h1>
+    <div class="sub">${esc(S.settings.village||"Add your village in Settings")} · Total land: ${S.settings.totalGuntha} Guntha</div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">${S.plots.length}</div><div class="lbl">Active plots</div></div>
+      <div class="stat"><div class="num">${totalPlotted}/${S.settings.totalGuntha}</div><div class="lbl">Guntha planted</div></div>
+      <div class="stat"><div class="num">${money(totalIncome())}</div><div class="lbl">Total income</div></div>
+    </div>
+    ${!cloudConnected ? `<div class="tip-box" style="background:rgba(255,255,255,0.9);margin-top:10px;">⚠️ Cloud sync isn't set up yet — data is only saved on this device/browser and won't be visible to others. See the comment at the top of the file's &lt;script&gt; for the 5-minute Firebase setup.</div>` : ''}
+  </header>`;
+}
+function renderNav(){
+  const items = [
+    ["home","🏠","Home"],["plots","🌱","Plots"],["calendar","📅","Calendar"],
+    ["nutrition","🧪","Nutrition"],["maintenance","✅","Daily Log"],["poultry","🐔","Poultry"],["market","🛒","Market"],["accounts","💰","Accounts"]
+  ];
+  return `<nav class="bottom">${items.map(([k,ic,lb])=>`
+    <div class="nitem ${currentTab===k?'active':''}" onclick="setTab('${k}')"><div class="ic">${ic}</div><div>${lb}</div></div>
+  `).join('')}</nav>`;
+}
+function renderTab(){
+  switch(currentTab){
+    case 'home': return renderHome();
+    case 'plots': return renderPlots();
+    case 'calendar': return renderCalendar();
+    case 'nutrition': return renderNutrition();
+    case 'maintenance': return renderMaintenance();
+    case 'poultry': return renderPoultry();
+    case 'market': return renderMarket();
+    case 'accounts': return renderAccounts();
+    default: return '';
+  }
+}
+function setTab(t){ currentTab=t; ui.showPlotForm=false; ui.showNutForm=false; ui.showMaintForm=false; ui.showSaleForm=false; ui.showExpForm=false; ui.nutPrefill=null;
+  ui.showBatchForm=false; ui.editBatchId=null; ui.showEggForm=false; ui.showHealthForm=false; ui.healthPrefill=null; ui.showPoultrySaleForm=false; ui.showPoultryExpForm=false;
+  render(); window.scrollTo(0,0); }
+
+/* ---- HOME ---- */
+function totalIncome(){
+  const cropIncome = S.sales.reduce((a,s)=>a+Number(s.totalAmount||0),0);
+  const poultryIncome = S.poultrySales.reduce((a,s)=>a+Number(s.totalAmount||0),0);
+  return cropIncome + poultryIncome;
+}
+function totalExpenses(){
+  const cropExp = S.expenses.reduce((a,e)=>a+Number(e.amount||0),0);
+  const poultryExp = S.poultryExpenses.reduce((a,e)=>a+Number(e.amount||0),0);
+  return cropExp + poultryExp;
+}
+function upcomingEvents(days=10){
+  const events=[];
+  S.plots.forEach(p=>{
+    const crop=CROP_DB[p.vegetable]; if(!crop) return;
+    crop.stages.forEach(([label,day])=>{
+      const date = addDays(p.sowingDate, day);
+      const diff = daysBetween(todayStr(), date);
+      if(diff>=0 && diff<=days) events.push({date, plot:p.name, veg:p.vegetable, label, diff});
+    });
+  });
+  events.sort((a,b)=>a.diff-b.diff);
+  return events;
+}
+function renderHome(){
+  const events = upcomingEvents(10);
+  const remaining = S.settings.totalGuntha - S.plots.reduce((a,p)=>a+Number(p.area||0),0);
+  return `
+  <div class="section-title">⚡ Quick add</div>
+  <div class="mini-row">
+    <button class="btn btn-primary btn-sm" onclick="setTab('plots');ui.showPlotForm=true;render();">+ Plot</button>
+    <button class="btn btn-ghost btn-sm" onclick="setTab('nutrition');ui.showNutForm=true;render();">+ Nutrition/Pest log</button>
+    <button class="btn btn-ghost btn-sm" onclick="setTab('maintenance');ui.showMaintForm=true;render();">+ Daily task</button>
+    <button class="btn btn-accent btn-sm" onclick="setTab('market');ui.showSaleForm=true;render();">+ Veg sale</button>
+    <button class="btn btn-ghost btn-sm" onclick="setTab('poultry');ui.poultrySubTab='eggs';ui.showEggForm=true;render();">🐔 + Egg log</button>
+    <button class="btn btn-accent btn-sm" onclick="setTab('poultry');ui.poultrySubTab='sales';ui.showPoultrySaleForm=true;render();">🐔 + Egg/bird sale</button>
+  </div>
+
+  <div class="section-title">📅 Next 10 days<span class="tag">${events.length} events</span></div>
+  <div class="card">
+    ${events.length? events.map(e=>`
+      <div class="log-item">
+        <div><b>${esc(e.plot)}</b> — ${esc(e.veg)}<div class="meta">${e.label}</div></div>
+        <div class="amt" style="color:${e.diff===0?'var(--red)':'var(--green-dark)'}">${e.diff===0?'Today':(e.diff===1?'Tomorrow':fmtDate(e.date))}</div>
+      </div>`).join('') : `<div class="empty" style="padding:14px;"><div class="icon">🌤️</div>No stage changes in the next 10 days.</div>`}
+  </div>
+
+  <div class="section-title">💰 Money snapshot</div>
+  <div class="card">
+    <div class="summary-grid">
+      <div class="summary-box income"><div class="lbl">Total income</div><div class="val">${money(totalIncome())}</div></div>
+      <div class="summary-box expense"><div class="lbl">Total expenses</div><div class="val">${money(totalExpenses())}</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="row-between"><span style="font-weight:600;">Net profit so far</span><span style="font-weight:700;color:${(totalIncome()-totalExpenses())>=0?'var(--green-dark)':'var(--red)'}">${money(totalIncome()-totalExpenses())}</span></div>
+  </div>
+
+  <div class="section-title">🗺️ Land status</div>
+  <div class="card">
+    <div class="row-between"><span>Total farm land</span><b>${S.settings.totalGuntha} Guntha</b></div>
+    <div class="row-between"><span>Allocated to plots</span><b>${S.settings.totalGuntha-remaining} Guntha</b></div>
+    <div class="row-between"><span>${remaining>=0?'Remaining to plan':'Over-allocated by'}</span><b style="color:${remaining<0?'var(--red)':'var(--green-dark)'}">${Math.abs(remaining)} Guntha</b></div>
+    <a class="linklike" onclick="openSettings()">Edit farm details →</a>
+  </div>
+  `;
+}
+function openSettings(){
+  const box = document.createElement('div');
+  const f = S.settings;
+  const html = `
+  <div class="form-card" id="settingsForm">
+    <h3>Farm settings</h3>
+    <label>Farm name</label><input id="s_name" value="${esc(f.farmName)}">
+    <div class="form-grid">
+      <div><label>Village</label><input id="s_village" value="${esc(f.village)}"></div>
+      <div><label>Taluka</label><input id="s_taluka" value="${esc(f.taluka)}"></div>
+    </div>
+    <div class="form-grid">
+      <div><label>District</label><input id="s_district" value="${esc(f.district)}"></div>
+      <div><label>Total land (Guntha)</label><input id="s_guntha" type="number" value="${f.totalGuntha}"></div>
+    </div>
+    <div class="mini-row" style="margin-top:12px;">
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+      <button class="btn btn-outline" onclick="render()">Cancel</button>
+    </div>
+  </div>`;
+  document.getElementById('content').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('settingsForm').scrollIntoView({behavior:'smooth'});
+}
+async function saveSettings(){
+  S.settings = {
+    farmName: document.getElementById('s_name').value || "My Vegetable Farm",
+    village: document.getElementById('s_village').value,
+    taluka: document.getElementById('s_taluka').value || "Karad",
+    district: document.getElementById('s_district').value || "Satara",
+    totalGuntha: Number(document.getElementById('s_guntha').value) || 30
+  };
+  await saveKey('farm-settings', S.settings);
+  showToast('Farm details saved'); render();
+}
+
+/* ---- PLOTS ---- */
+function renderPlots(){
+  return `
+  <div class="section-title">🌱 Your plots<span class="tag">${S.plots.length} of 15-20 planned</span></div>
+  ${ui.showPlotForm ? renderPlotForm() : `<button class="btn btn-primary btn-full" onclick="ui.showPlotForm=true;render();">+ Add new plot</button>`}
+  ${S.plots.length===0 ? `<div class="empty"><div class="icon">🌾</div>No plots yet. Divide your 30 Guntha into 15-20 pieces and add each one here — vegetable, area and sowing date.</div>` :
+    S.plots.map(p=>renderPlotCard(p)).join('')}
+  `;
+}
+function renderPlotForm(){
+  const editing = ui.editPlotId ? S.plots.find(p=>p.id===ui.editPlotId) : null;
+  return `
+  <div class="form-card">
+    <h3>${editing?'Edit plot':'New plot'}</h3>
+    <div class="form-grid">
+      <div><label>Plot name / number</label><input id="pf_name" placeholder="e.g. Plot 3" value="${editing?esc(editing.name):''}"></div>
+      <div><label>Area (Guntha)</label><input id="pf_area" type="number" step="0.25" placeholder="e.g. 1.5" value="${editing?editing.area:''}"></div>
+    </div>
+    <label>Vegetable</label>
+    <select id="pf_veg">${VEG_NAMES.map(v=>`<option value="${v}" ${editing&&editing.vegetable===v?'selected':''}>${v} · ${CROP_DB[v].mr}</option>`).join('')}</select>
+    <label>Sowing / transplanting date</label>
+    <input id="pf_date" type="date" value="${editing?editing.sowingDate:todayStr()}">
+    <label>Notes (soil, seed variety, source, etc.) — optional</label>
+    <textarea id="pf_notes" placeholder="e.g. Hybrid variety, drip irrigation">${editing?esc(editing.notes||''):''}</textarea>
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="savePlot(${editing?`'${editing.id}'`:'null'})">${editing?'Save changes':'Add plot'}</button>
+      <button class="btn btn-outline" onclick="ui.showPlotForm=false;ui.editPlotId=null;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+async function savePlot(id){
+  const name = document.getElementById('pf_name').value.trim();
+  const area = Number(document.getElementById('pf_area').value);
+  const vegetable = document.getElementById('pf_veg').value;
+  const sowingDate = document.getElementById('pf_date').value;
+  const notes = document.getElementById('pf_notes').value.trim();
+  if(!name || !area || !sowingDate){ showToast('Please fill plot name, area and date'); return; }
+  if(id){
+    const p = S.plots.find(x=>x.id===id);
+    Object.assign(p, {name, area, vegetable, sowingDate, notes});
+  }else{
+    S.plots.push({id:uid(), name, area, vegetable, sowingDate, notes});
+  }
+  await saveKey('plots', S.plots);
+  ui.showPlotForm=false; ui.editPlotId=null;
+  showToast('Plot saved'); render();
+}
+async function deletePlot(id){
+  if(!confirm('Delete this plot? Its logs will remain but unlinked.')) return;
+  S.plots = S.plots.filter(p=>p.id!==id);
+  await saveKey('plots', S.plots);
+  showToast('Plot deleted'); render();
+}
+function editPlot(id){ ui.editPlotId=id; ui.showPlotForm=true; render(); }
+function renderPlotCard(p){
+  const prog = getPlotProgress(p);
+  if(!prog){
+    return `<div class="card plot-card"><div class="plot-head"><div><div class="plot-name">${esc(p.name)}</div><div class="plot-veg">${esc(p.vegetable)} · ${p.area} Guntha</div></div></div></div>`;
+  }
+  const overdue = prog.elapsed > prog.duration;
+  return `
+  <div class="card plot-card">
+    <div class="plot-head">
+      <div><div class="plot-name">${esc(p.name)}</div><div class="plot-veg">${esc(p.vegetable)} <span class="dv">${CROP_DB[p.vegetable].mr}</span> · ${p.area} Guntha</div></div>
+      <span class="badge ${overdue?'badge-turmeric':'badge-green'}">${overdue?'Past harvest window':prog.stageName}</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${prog.pct}%"></div></div>
+    <div class="stage-labels"><span>Sown ${fmtDate(p.sowingDate)}</span><span>${overdue?'Ended '+fmtDate(prog.harvestEndDate):'Harvest by '+fmtDate(prog.harvestEndDate)}</span></div>
+    ${prog.nextStage ? `<div class="tip-box">🗓️ Next: <b>${prog.nextStage[0]}</b> around ${fmtDate(addDays(p.sowingDate,prog.nextStage[1]))}</div>` : ''}
+    ${p.notes ? `<div class="tip-box" style="background:var(--green-soft);color:var(--green-dark);">📝 ${esc(p.notes)}</div>`:''}
+    <div class="mini-row">
+      <button class="btn btn-ghost btn-sm" onclick="currentTab='nutrition';ui.nutFilterPlot='${p.id}';render();window.scrollTo(0,0);">🧪 Nutrition plan</button>
+      <button class="btn btn-ghost btn-sm" onclick="setTab('maintenance');ui.showMaintForm=true;render();">✅ Log task</button>
+      <button class="btn btn-accent btn-sm" onclick="setTab('market');ui.showSaleForm=true;render();">🛒 Log sale</button>
+      <button class="btn btn-outline btn-sm" onclick="editPlot('${p.id}')">✏️ Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="deletePlot('${p.id}')">🗑️</button>
+    </div>
+  </div>`;
+}
+
+/* ---- CALENDAR ---- */
+function renderCalendar(){
+  const events=[];
+  S.plots.forEach(p=>{
+    const crop = CROP_DB[p.vegetable]; if(!crop) return;
+    crop.stages.forEach(([label,day])=>{
+      events.push({date:addDays(p.sowingDate,day), plot:p.name, plotId:p.id, veg:p.vegetable, label, day});
+    });
+  });
+  events.sort((a,b)=> new Date(a.date)-new Date(b.date));
+  const filtered = ui.plotForCalendarFilter==='all'? events : events.filter(e=>e.plotId===ui.plotForCalendarFilter);
+  const today = todayStr();
+  let lastMonth = "";
+  const rows = filtered.map(e=>{
+    const mo = new Date(e.date+"T00:00:00").toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+    let monthHeader = "";
+    if(mo!==lastMonth){ monthHeader = `<div style="font-weight:700;color:var(--green-dark);font-size:12.5px;margin:12px 0 4px;">${mo}</div>`; lastMonth=mo; }
+    const isPast = e.date < today;
+    const isToday = e.date===today;
+    return monthHeader + `<div class="log-item">
+      <div><b>${esc(e.plot)}</b> — ${esc(e.veg)}<div class="meta">${e.label}</div></div>
+      <div class="amt" style="color:${isToday?'var(--red)':isPast?'var(--text-mute)':'var(--green-dark)'}">${fmtDate(e.date)}</div>
+    </div>`;
+  }).join('');
+  return `
+  <div class="section-title">📅 Crop calendar<span class="tag">Auto-generated from sowing dates</span></div>
+  <div class="pill-tabs">
+    <div class="pill ${ui.plotForCalendarFilter==='all'?'active':''}" onclick="ui.plotForCalendarFilter='all';render();">All plots</div>
+    ${S.plots.map(p=>`<div class="pill ${ui.plotForCalendarFilter===p.id?'active':''}" onclick="ui.plotForCalendarFilter='${p.id}';render();">${esc(p.name)}</div>`).join('')}
+  </div>
+  <div class="card">
+    ${S.plots.length===0? `<div class="empty"><div class="icon">📭</div>Add plots first — the calendar builds itself from each crop's sowing date.</div>` :
+      (filtered.length? rows : `<div class="empty"><div class="icon">📭</div>No events for this filter.</div>`)}
+  </div>
+  `;
+}
+
+/* ---- NUTRITION & PEST CONTROL ---- */
+function buildNutritionPlan(plot){
+  const crop = CROP_DB[plot.vegetable];
+  if(!crop || !crop.nutritionPlan) return [];
+  const area = Number(plot.area)||1;
+  return crop.nutritionPlan.map(item=>{
+    const date = addDays(plot.sowingDate, item.day);
+    const totalQty = item.qty!=null ? (item.qty*area).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1') : null;
+    const amountLabel = (item.qty!=null)
+      ? (ui.lang==='mr'
+          ? `या प्लॉटसाठी एकूण ${totalQty} ${item.unit} (दर गुंठ्याला ${item.qty} ${item.unit} × ${area} गुंठा)`
+          : `${totalQty} ${item.unit} for this plot (${item.qty} ${item.unit}/Guntha × ${area} Guntha)`)
+      : null;
+    return {...item, date, amountLabel};
+  });
+}
+function renderNutrition(){
+  const logs = S.nutrition.filter(n=> ui.nutFilterPlot==='all' || n.plotId===ui.nutFilterPlot)
+                          .sort((a,b)=> new Date(b.date)-new Date(a.date));
+  const activePlot = S.plots.find(p=>p.id===ui.nutFilterPlot);
+  const today = todayStr();
+  const plan = activePlot ? buildNutritionPlan(activePlot) : [];
+  return `
+  <div class="section-title">🧪 ${ui.lang==='mr'?'खत, पोषण व कीड-रोग नियंत्रण':'Nutrition & pest control'}</div>
+  ${langToggleHTML()}
+  ${ui.showNutForm ? renderNutForm() : `<button class="btn btn-primary btn-full" onclick="ui.nutPrefill=null;ui.showNutForm=true;render();">${ui.lang==='mr'?'+ खत/कीटकनाशक नोंद करा':'+ Log fertilizer / pesticide'}</button>`}
+  <div class="pill-tabs">
+    <div class="pill ${ui.nutFilterPlot==='all'?'active':''}" onclick="ui.nutFilterPlot='all';render();">${ui.lang==='mr'?'सर्व प्लॉट':'All plots'}</div>
+    ${S.plots.map(p=>`<div class="pill ${ui.nutFilterPlot===p.id?'active':''}" onclick="ui.nutFilterPlot='${p.id}';render();">${esc(p.name)}</div>`).join('')}
+  </div>
+  ${activePlot && plan.length ? `
+    <div class="section-title" style="margin-top:6px;">📋 ${ui.lang==='mr'?'खत/पोषण योजना':'Nutrition plan'} – ${esc(activePlot.name)}<span class="tag">${activePlot.vegetable} · ${activePlot.area} Guntha</span></div>
+    <div class="card" style="padding:8px 14px;">
+      ${plan.map((item,i)=>{
+        const isPast = item.date < today;
+        const isToday = item.date === today;
+        const statusColor = isToday? 'var(--red)': isPast? 'var(--text-mute)':'var(--green-dark)';
+        const statusLabel = isToday? (ui.lang==='mr'?'आज द्यायचे आहे':'Due today') : isPast? (ui.lang==='mr'?'मुदत उलटली':'Past') : fmtDate(item.date);
+        return `<div class="log-item" style="align-items:flex-start;">
+          <div>
+            <div><b>${esc(trInput(item.input))}</b> <span class="badge badge-green" style="margin-left:4px;">${esc(trStage(item.stage))}</span></div>
+            <div class="meta">${item.amountLabel ? esc(item.amountLabel) : (ui.lang==='mr'?'फवारणीचे प्रमाण पद्धतीत पहा':'See method for spray concentration')}</div>
+            <div class="meta">🧭 ${esc(trMethod(item.method))}</div>
+          </div>
+          <div style="text-align:right;white-space:nowrap;">
+            <div class="amt" style="color:${statusColor};font-size:12px;">${statusLabel}</div>
+            <button class="btn btn-ghost btn-sm" style="margin-top:6px;padding:4px 8px;font-size:11px;" onclick="quickLogFromPlan('${activePlot.id}', ${i})">${ui.lang==='mr'?'+ नोंद करा':'+ Log this'}</button>
+          </div>
+        </div>`;
+      }).join('')}
+      <div style="margin-top:8px;font-size:11px;color:var(--text-mute);">${ui.lang==='mr'?'ही प्रमाणे प्रति गुंठा (सुमारे १०८९ चौ.फूट) सर्वसाधारण मार्गदर्शनासाठी आहेत — तुमच्या जमिनीच्या प्रकारानुसार व कृषी विद्यापीठ/केव्हीकेच्या माती परीक्षण शिफारशीनुसार बदल करा.':'Amounts are general guidance per Guntha (approx. 1089 sq ft) — adjust to your soil type and any soil-test recommendation from your local Krishi Vidyapeeth/KVK.'}</div>
+    </div>
+    <div class="card" style="background:var(--turmeric-soft);border:none;">
+      <b style="font-size:13px;">🐛 ${ui.lang==='mr'?'लक्ष ठेवण्यासारख्या कीड व रोग':'Pests & diseases to watch for'} — ${esc(activePlot.vegetable)}</b>
+      <div style="margin-top:6px;">${CROP_DB[activePlot.vegetable].pests.map(name=>renderPestDetail(name)).join('')}</div>
+    </div>` : ''}
+  ${ui.nutFilterPlot==='all' ? `<div class="tip-box">${ui.lang==='mr'?'वरील यादीतून एक प्लॉट निवडा, म्हणजे त्याची संपूर्ण तारीखनिहाय खत योजना व कीड-रोगाची माहिती दिसेल.':'Select a plot above to see its full date-wise nutrition plan and its specific pest/disease risks.'}</div>` : ''}
+
+  <div class="section-title">📖 ${ui.lang==='mr'?'कीड व रोग माहिती संग्रह':'Pest & disease library'}<span class="tag">${Object.keys(PEST_DB).length} entries</span></div>
+  <div class="card">
+    <input type="text" placeholder="${ui.lang==='mr'?'शोधा उदा. मावा, करपा, अळी…':'Search e.g. aphid, blight, borer…'}" oninput="filterPestLibrary(this.value)">
+    <div id="pestLibraryResults" style="margin-top:8px;">${renderPestLibraryItems('')}</div>
+  </div>
+  <div class="section-title">📝 ${ui.lang==='mr'?'नोंदवलेला इतिहास':'Logged history'}</div>
+  <div class="card">
+    ${logs.length? logs.map(n=>renderNutLog(n)).join('') : `<div class="empty"><div class="icon">🧪</div>${ui.lang==='mr'?'अजून नोंदी नाहीत. दिलेले प्रत्येक खत, कीटकनाशक किंवा पोषण इथे नोंदवा.':'No logs yet. Record every fertilizer, pesticide or nutrition input here.'}</div>`}
+  </div>
+  `;
+}
+function renderPestDetail(name){
+  const p = PEST_DB[name];
+  if(!p) return `<div class="tip-box" style="background:transparent;">• ${esc(name)}</div>`;
+  const displayName = trPestName(name);
+  const symptoms = trPestField(name,'symptoms') || p.symptoms;
+  const organic = trPestField(name,'organic') || p.organic;
+  const chemical = trPestField(name,'chemical') || p.chemical;
+  return `<details style="margin-bottom:6px;">
+    <summary style="cursor:pointer;font-weight:600;font-size:12.5px;">${esc(displayName)}</summary>
+    <div style="font-size:12px;margin:6px 0 2px;"><b>${ui.lang==='mr'?'लक्षणे':'Symptoms'}:</b> ${esc(symptoms)}</div>
+    <div style="font-size:12px;margin:4px 0;"><b>🌿 ${ui.lang==='mr'?'सेंद्रिय/पारंपरिक उपाय':'Organic/cultural control'}:</b> ${esc(organic)}</div>
+    <div style="font-size:12px;margin:4px 0;"><b>🧪 ${ui.lang==='mr'?'रासायनिक उपाय':'Chemical control'}:</b> ${esc(chemical)}</div>
+  </details>`;
+}
+function renderPestLibraryItems(term){
+  const t = (term||'').trim().toLowerCase();
+  const names = Object.keys(PEST_DB).filter(n=> !t || n.toLowerCase().includes(t) || (PEST_MR[n] && PEST_MR[n].name.includes(term||'')));
+  if(!names.length) return `<div class="empty" style="padding:14px;"><div class="icon">🔍</div>${ui.lang==='mr'?'काही जुळले नाही. दुसरा शब्द वापरून पहा.':'No match. Try a different word.'}</div>`;
+  return names.map(n=>renderPestDetail(n)).join('');
+}
+function filterPestLibrary(term){
+  ui.pestSearch = term;
+  const el = document.getElementById('pestLibraryResults');
+  if(el) el.innerHTML = renderPestLibraryItems(term);
+}
+function quickLogFromPlan(plotId, idx){
+  const plot = S.plots.find(p=>p.id===plotId);
+  const plan = buildNutritionPlan(plot);
+  const item = plan[idx];
+  ui.nutPrefill = {
+    plotId,
+    date: item.date < todayStr() ? todayStr() : item.date,
+    type: "Fertilizer / Nutrition",
+    product: trInput(item.input),
+    dose: item.amountLabel ? item.amountLabel : trMethod(item.method),
+    notes: `${trStage(item.stage)} – ${trMethod(item.method)}`
+  };
+  ui.showNutForm = true;
+  render();
+  document.getElementById('content')?.scrollIntoView({behavior:'smooth'});
+}
+function renderNutForm(){
+  const pf = ui.nutPrefill || {};
+  return `
+  <div class="form-card">
+    <h3>New nutrition / pest log</h3>
+    <label>Plot</label>
+    <select id="nf_plot">${S.plots.map(p=>`<option value="${p.id}" ${pf.plotId===p.id?'selected':''}>${esc(p.name)} · ${p.vegetable}</option>`).join('')}</select>
+    <div class="form-grid">
+      <div><label>Date</label><input id="nf_date" type="date" value="${pf.date||todayStr()}"></div>
+      <div><label>Type</label><select id="nf_type">${NUT_TYPES.map(t=>`<option ${pf.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-grid">
+      <div><label>Product name</label><input id="nf_product" placeholder="e.g. Urea, Neem oil" value="${esc(pf.product||'')}"></div>
+      <div><label>Quantity / dose</label><input id="nf_dose" placeholder="e.g. 2 kg, 5 ml/L" value="${esc(pf.dose||'')}"></div>
+    </div>
+    <label>Notes</label><textarea id="nf_notes" placeholder="Reason, target pest/deficiency, weather">${esc(pf.notes||'')}</textarea>
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="saveNutLog()">Save log</button>
+      <button class="btn btn-outline" onclick="ui.showNutForm=false;ui.nutPrefill=null;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+async function saveNutLog(){
+  if(S.plots.length===0){ showToast('Add a plot first'); return; }
+  const plotId = document.getElementById('nf_plot').value;
+  const date = document.getElementById('nf_date').value;
+  const type = document.getElementById('nf_type').value;
+  const product = document.getElementById('nf_product').value.trim();
+  const dose = document.getElementById('nf_dose').value.trim();
+  const notes = document.getElementById('nf_notes').value.trim();
+  if(!product){ showToast('Enter product name'); return; }
+  S.nutrition.push({id:uid(), plotId, date, type, product, dose, notes});
+  await saveKey('nutrition-logs', S.nutrition);
+  ui.showNutForm=false; ui.nutPrefill=null; showToast('Logged'); render();
+}
+async function deleteNutLog(id){
+  S.nutrition = S.nutrition.filter(n=>n.id!==id);
+  await saveKey('nutrition-logs', S.nutrition);
+  render();
+}
+function renderNutLog(n){
+  const p = S.plots.find(x=>x.id===n.plotId);
+  return `<div class="log-item">
+    <div><b>${esc(n.product)}</b> ${n.dose?'· '+esc(n.dose):''}<div class="meta">${esc(p?p.name:'—')} · ${n.type} · ${fmtDate(n.date)}${n.notes?' · '+esc(n.notes):''}</div></div>
+    <div><button class="close-x" onclick="deleteNutLog('${n.id}')">✕</button></div>
+  </div>`;
+}
+
+/* ---- MAINTENANCE / DAILY TRACKING ---- */
+function renderMaintenance(){
+  const logs = S.maintenance.filter(m=> ui.maintFilterPlot==='all' || m.plotId===ui.maintFilterPlot)
+                            .sort((a,b)=> new Date(b.date)-new Date(a.date));
+  return `
+  <div class="section-title">✅ Daily maintenance tracking</div>
+  ${ui.showMaintForm ? renderMaintForm() : `<button class="btn btn-primary btn-full" onclick="ui.showMaintForm=true;render();">+ Log today's work</button>`}
+  <div class="pill-tabs">
+    <div class="pill ${ui.maintFilterPlot==='all'?'active':''}" onclick="ui.maintFilterPlot='all';render();">All plots</div>
+    ${S.plots.map(p=>`<div class="pill ${ui.maintFilterPlot===p.id?'active':''}" onclick="ui.maintFilterPlot='${p.id}';render();">${esc(p.name)}</div>`).join('')}
+  </div>
+  <div class="card">
+    ${logs.length? logs.map(m=>renderMaintLog(m)).join('') : `<div class="empty"><div class="icon">✅</div>No daily logs yet. Track watering, weeding, staking, labour, etc.</div>`}
+  </div>`;
+}
+function renderMaintForm(){
+  return `
+  <div class="form-card">
+    <h3>New daily log</h3>
+    <label>Plot (or General for whole-farm work)</label>
+    <select id="mf_plot"><option value="">General / Whole farm</option>${S.plots.map(p=>`<option value="${p.id}">${esc(p.name)} · ${p.vegetable}</option>`).join('')}</select>
+    <div class="form-grid">
+      <div><label>Date</label><input id="mf_date" type="date" value="${todayStr()}"></div>
+      <div><label>Activity</label><select id="mf_type">${MAINT_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-grid">
+      <div><label>Labourers (count)</label><input id="mf_labour" type="number" placeholder="e.g. 2"></div>
+      <div><label>Labour cost (₹)</label><input id="mf_cost" type="number" placeholder="e.g. 600"></div>
+    </div>
+    <label>Notes</label><textarea id="mf_notes" placeholder="What was done, any observations"></textarea>
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="saveMaintLog()">Save log</button>
+      <button class="btn btn-outline" onclick="ui.showMaintForm=false;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+async function saveMaintLog(){
+  const plotId = document.getElementById('mf_plot').value;
+  const date = document.getElementById('mf_date').value;
+  const activity = document.getElementById('mf_type').value;
+  const labour = document.getElementById('mf_labour').value;
+  const cost = Number(document.getElementById('mf_cost').value)||0;
+  const notes = document.getElementById('mf_notes').value.trim();
+  S.maintenance.push({id:uid(), plotId, date, activity, labour, cost, notes});
+  await saveKey('maintenance-logs', S.maintenance);
+  if(cost>0){
+    S.expenses.push({id:uid(), date, category:'Labour', description:`${activity}${plotId?' ('+(S.plots.find(p=>p.id===plotId)?.name||'')+')':''}`, amount:cost, plotId});
+    await saveKey('expenses', S.expenses);
+  }
+  ui.showMaintForm=false; showToast('Logged'+(cost>0?' + added to expenses':'')); render();
+}
+async function deleteMaintLog(id){
+  S.maintenance = S.maintenance.filter(m=>m.id!==id);
+  await saveKey('maintenance-logs', S.maintenance);
+  render();
+}
+function renderMaintLog(m){
+  const p = S.plots.find(x=>x.id===m.plotId);
+  return `<div class="log-item">
+    <div><b>${m.activity}</b><div class="meta">${p?esc(p.name):'General'} · ${fmtDate(m.date)}${m.labour?' · '+m.labour+' labour':''}${m.notes?' · '+esc(m.notes):''}</div></div>
+    <div style="text-align:right;">${m.cost?`<div class="amt">${money(m.cost)}</div>`:''}<button class="close-x" onclick="deleteMaintLog('${m.id}')">✕</button></div>
+  </div>`;
+}
+
+/* ---- DESI CHICKEN / POULTRY ---- */
+function renderPoultry(){
+  const subTabs = [["batches","🐔 Flocks"],["eggs","🥚 Egg Log"],["health","💉 Health"],["sales","🛒 Sales"],["money","💰 Bookkeeping"]];
+  return `
+  <div class="section-title">🐔 Desi chicken farm</div>
+  <div class="pill-tabs">
+    ${subTabs.map(([k,lb])=>`<div class="pill ${ui.poultrySubTab===k?'active':''}" onclick="ui.poultrySubTab='${k}';render();">${lb}</div>`).join('')}
+  </div>
+  ${ui.poultrySubTab==='batches' ? renderPoultryBatches() :
+    ui.poultrySubTab==='eggs' ? renderPoultryEggs() :
+    ui.poultrySubTab==='health' ? renderPoultryHealth() :
+    ui.poultrySubTab==='sales' ? renderPoultrySales() :
+    renderPoultryMoney()}
+  `;
+}
+function totalLayingHens(){ return S.batches.reduce((a,b)=>a+Number(b.layingHens||0),0); }
+
+/* -- Flocks / batches -- */
+function renderPoultryBatches(){
+  return `
+  ${ui.showBatchForm ? renderBatchForm() : `<button class="btn btn-primary btn-full" onclick="ui.editBatchId=null;ui.showBatchForm=true;render();">+ Add flock / batch</button>`}
+  ${S.batches.length===0 ? `<div class="empty"><div class="icon">🐔</div>No flocks yet. Add a batch for each group of birds you're raising (by breed and date acquired).</div>` :
+    S.batches.map(b=>renderBatchCard(b)).join('')}
+  `;
+}
+function renderBatchForm(){
+  const editing = ui.editBatchId ? S.batches.find(b=>b.id===ui.editBatchId) : null;
+  return `
+  <div class="form-card">
+    <h3>${editing?'Edit flock':'New flock / batch'}</h3>
+    <div class="form-grid">
+      <div><label>Batch name / number</label><input id="bf_name" placeholder="e.g. Batch 1" value="${editing?esc(editing.name):''}"></div>
+      <div><label>Breed</label><select id="bf_breed">${POULTRY_BREEDS.map(x=>`<option ${editing&&editing.breed===x?'selected':''}>${x}</option>`).join('')}</select></div>
+    </div>
+    <div class="form-grid">
+      <div><label>Total birds</label><input id="bf_count" type="number" value="${editing?editing.count:''}"></div>
+      <div><label>Laying hens (of the above)</label><input id="bf_laying" type="number" value="${editing?editing.layingHens||'':''}"></div>
+    </div>
+    <label>Date acquired (as day-old chicks, if applicable)</label>
+    <input id="bf_date" type="date" value="${editing?editing.acquiredDate:todayStr()}">
+    <label>Notes</label><textarea id="bf_notes" placeholder="Source, housing type, etc.">${editing?esc(editing.notes||''):''}</textarea>
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="saveBatch(${editing?`'${editing.id}'`:'null'})">${editing?'Save changes':'Add flock'}</button>
+      <button class="btn btn-outline" onclick="ui.showBatchForm=false;ui.editBatchId=null;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+async function saveBatch(id){
+  const name = document.getElementById('bf_name').value.trim();
+  const breed = document.getElementById('bf_breed').value;
+  const count = Number(document.getElementById('bf_count').value)||0;
+  const layingHens = Number(document.getElementById('bf_laying').value)||0;
+  const acquiredDate = document.getElementById('bf_date').value;
+  const notes = document.getElementById('bf_notes').value.trim();
+  if(!name || !count || !acquiredDate){ showToast('Please fill batch name, bird count and date'); return; }
+  if(id){
+    const b = S.batches.find(x=>x.id===id);
+    Object.assign(b, {name, breed, count, layingHens, acquiredDate, notes});
+  }else{
+    S.batches.push({id:uid(), name, breed, count, layingHens, acquiredDate, notes});
+  }
+  await saveKey('poultry-batches', S.batches);
+  ui.showBatchForm=false; ui.editBatchId=null;
+  showToast('Flock saved'); render();
+}
+async function deleteBatch(id){
+  if(!confirm('Delete this flock? Its logs will remain but unlinked.')) return;
+  S.batches = S.batches.filter(b=>b.id!==id);
+  await saveKey('poultry-batches', S.batches);
+  showToast('Flock deleted'); render();
+}
+function editBatch(id){ ui.editBatchId=id; ui.showBatchForm=true; render(); }
+function renderBatchCard(b){
+  const ageDays = daysBetween(b.acquiredDate, todayStr());
+  const ageLabel = ageDays<60 ? `${ageDays} days old` : `${Math.floor(ageDays/30)} months old`;
+  const eggsThisBatch = S.eggLogs.filter(e=>e.batchId===b.id).reduce((a,e)=>a+Number(e.eggsCollected||0),0);
+  return `
+  <div class="card plot-card">
+    <div class="plot-head">
+      <div><div class="plot-name">${esc(b.name)}</div><div class="plot-veg">${esc(b.breed)} · ${b.count} birds${b.layingHens?` (${b.layingHens} laying)`:''}</div></div>
+      <span class="badge badge-green">${ageLabel}</span>
+    </div>
+    <div class="stage-labels" style="margin-top:8px;"><span>Acquired ${fmtDate(b.acquiredDate)}</span><span>${eggsThisBatch} eggs to date</span></div>
+    ${b.notes ? `<div class="tip-box" style="background:var(--green-soft);color:var(--green-dark);">📝 ${esc(b.notes)}</div>`:''}
+    <div class="mini-row">
+      <button class="btn btn-ghost btn-sm" onclick="ui.poultrySubTab='eggs';ui.batchFilter='${b.id}';render();">🥚 Egg log</button>
+      <button class="btn btn-ghost btn-sm" onclick="ui.poultrySubTab='health';ui.batchFilter='${b.id}';render();">💉 Health plan</button>
+      <button class="btn btn-accent btn-sm" onclick="ui.poultrySubTab='sales';ui.showPoultrySaleForm=true;render();">🛒 Log sale</button>
+      <button class="btn btn-outline btn-sm" onclick="editBatch('${b.id}')">✏️ Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteBatch('${b.id}')">🗑️</button>
+    </div>
+  </div>`;
+}
+
+/* -- Egg log -- */
+function renderPoultryEggs(){
+  const logs = S.eggLogs.filter(e=> ui.batchFilter==='all' || e.batchId===ui.batchFilter).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const last7 = S.eggLogs.filter(e=> (ui.batchFilter==='all' || e.batchId===ui.batchFilter) && daysBetween(e.date, todayStr())<=6 && daysBetween(e.date, todayStr())>=0);
+  const eggs7 = last7.reduce((a,e)=>a+Number(e.eggsCollected||0),0);
+  const avgPerDay = last7.length ? (eggs7/7).toFixed(1) : '0';
+  const hens = ui.batchFilter==='all' ? totalLayingHens() : Number((S.batches.find(b=>b.id===ui.batchFilter)||{}).layingHens||0);
+  const layingRate = hens ? Math.round((avgPerDay/hens)*100) : null;
+  return `
+  ${ui.showEggForm ? renderEggForm() : `<button class="btn btn-primary btn-full" onclick="ui.showEggForm=true;render();">+ Log today's eggs</button>`}
+  <div class="pill-tabs">
+    <div class="pill ${ui.batchFilter==='all'?'active':''}" onclick="ui.batchFilter='all';render();">All flocks</div>
+    ${S.batches.map(b=>`<div class="pill ${ui.batchFilter===b.id?'active':''}" onclick="ui.batchFilter='${b.id}';render();">${esc(b.name)}</div>`).join('')}
+  </div>
+  <div class="card">
+    <div class="summary-grid">
+      <div class="summary-box income"><div class="lbl">Eggs, last 7 days</div><div class="val">${eggs7}</div></div>
+      <div class="summary-box" style="background:var(--turmeric-soft);"><div class="lbl">Avg/day (laying rate)</div><div class="val">${avgPerDay}${layingRate!=null?` · ${layingRate}%`:''}</div></div>
+    </div>
+  </div>
+  <div class="card">
+    ${logs.length? logs.map(e=>renderEggLog(e)).join('') : `<div class="empty"><div class="icon">🥚</div>No egg logs yet. Log daily collection to track production.</div>`}
+  </div>`;
+}
+function renderEggForm(){
+  return `
+  <div class="form-card">
+    <h3>Log egg collection</h3>
+    <label>Flock / batch</label>
+    <select id="ef2_batch">${S.batches.length? S.batches.map(b=>`<option value="${b.id}">${esc(b.name)} · ${b.breed}</option>`).join('') : '<option value="">Add a flock first</option>'}</select>
+    <div class="form-grid">
+      <div><label>Date</label><input id="ef2_date" type="date" value="${todayStr()}"></div>
+      <div><label>Eggs collected</label><input id="ef2_eggs" type="number"></div>
+    </div>
+    <div class="form-grid">
+      <div><label>Broken / damaged eggs</label><input id="ef2_broken" type="number" value="0"></div>
+      <div></div>
+    </div>
+    <label>Notes</label><textarea id="ef2_notes" placeholder="Egg size, any health signs, weather"></textarea>
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="saveEggLog()">Save</button>
+      <button class="btn btn-outline" onclick="ui.showEggForm=false;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+async function saveEggLog(){
+  if(S.batches.length===0){ showToast('Add a flock first'); return; }
+  const batchId = document.getElementById('ef2_batch').value;
+  const date = document.getElementById('ef2_date').value;
+  const eggsCollected = Number(document.getElementById('ef2_eggs').value)||0;
+  const broken = Number(document.getElementById('ef2_broken').value)||0;
+  const notes = document.getElementById('ef2_notes').value.trim();
+  S.eggLogs.push({id:uid(), batchId, date, eggsCollected, broken, notes});
+  await saveKey('egg-logs', S.eggLogs);
+  ui.showEggForm=false; showToast('Egg log saved'); render();
+}
+async function deleteEggLog(id){
+  S.eggLogs = S.eggLogs.filter(e=>e.id!==id);
+  await saveKey('egg-logs', S.eggLogs);
+  render();
+}
+function renderEggLog(e){
+  const b = S.batches.find(x=>x.id===e.batchId);
+  return `<div class="log-item">
+    <div><b>${e.eggsCollected} eggs</b>${e.broken?` · ${e.broken} broken`:''}<div class="meta">${b?esc(b.name):'—'} · ${fmtDate(e.date)}${e.notes?' · '+esc(e.notes):''}</div></div>
+    <div><button class="close-x" onclick="deleteEggLog('${e.id}')">✕</button></div>
+  </div>`;
+}
+
+/* -- Health / vaccination -- */
+function buildVaccinationPlan(batch){
+  return VACCINATION_SCHEDULE.map((item,i)=>{
+    const date = addDays(batch.acquiredDate, item.day);
+    const mr = VACC_MR[i] || {};
+    const name = ui.lang==='mr' ? (mr.name||item.name) : item.name;
+    const method = ui.lang==='mr' ? (mr.method||item.method) : item.method;
+    const note = ui.lang==='mr' ? (mr.note||item.note) : item.note;
+    return {...item, date, name, method, note};
+  });
+}
+function renderPoultryHealth(){
+  const logs = S.poultryHealth.filter(h=> ui.batchFilter==='all' || h.batchId===ui.batchFilter).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const activeBatch = S.batches.find(b=>b.id===ui.batchFilter);
+  return `
+  ${langToggleHTML()}
+  ${ui.showHealthForm ? renderHealthForm() : `<button class="btn btn-primary btn-full" onclick="ui.healthPrefill=null;ui.showHealthForm=true;render();">${ui.lang==='mr'?'+ दिलेली लस/औषध नोंदवा':'+ Log medicine / vaccine given'}</button>`}
+  <div class="pill-tabs">
+    <div class="pill ${ui.batchFilter==='all'?'active':''}" onclick="ui.batchFilter='all';render();">${ui.lang==='mr'?'सर्व कळप':'All flocks'}</div>
+    ${S.batches.map(b=>`<div class="pill ${ui.batchFilter===b.id?'active':''}" onclick="ui.batchFilter='${b.id}';render();">${esc(b.name)}</div>`).join('')}
+  </div>
+  ${activeBatch ? `
+    <div class="section-title" style="margin-top:6px;">💉 ${ui.lang==='mr'?'लसीकरण व जंतनाशक योजना':'Vaccination & deworming plan'} – ${esc(activeBatch.name)}</div>
+    <div class="card" style="padding:8px 14px;">
+      ${buildVaccinationPlan(activeBatch).map((item,i)=>{
+        const today = todayStr();
+        const isPast = item.date < today, isToday = item.date===today;
+        const statusColor = isToday?'var(--red)':isPast?'var(--text-mute)':'var(--green-dark)';
+        const statusLabel = isToday?(ui.lang==='mr'?'आज द्यायचे आहे':'Due today'):isPast?(ui.lang==='mr'?'मुदत उलटली':'Past'):fmtDate(item.date);
+        return `<div class="log-item" style="align-items:flex-start;">
+          <div>
+            <div><b>${esc(item.name)}</b></div>
+            <div class="meta">🧭 ${esc(item.method)}</div>
+            <div class="meta">${esc(item.note)}</div>
+          </div>
+          <div style="text-align:right;white-space:nowrap;">
+            <div class="amt" style="color:${statusColor};font-size:12px;">${statusLabel}</div>
+            <button class="btn btn-ghost btn-sm" style="margin-top:6px;padding:4px 8px;font-size:11px;" onclick="quickLogVaccine('${activeBatch.id}', ${i})">${ui.lang==='mr'?'+ नोंद करा':'+ Log this'}</button>
+          </div>
+        </div>`;
+      }).join('')}
+      <div style="margin-top:8px;font-size:11px;color:var(--text-mute);">${ui.lang==='mr'?'ही सर्वसाधारण देशी कोंबडी पालन वेळापत्रक आहे — वेळ व मात्रेबाबत नेहमी तुमच्या स्थानिक पशुवैद्यक किंवा पशुसंवर्धन विभाग अधिकाऱ्यांकडून खात्री करा.':'This is a general backyard/desi poultry schedule — always confirm timing and dose with your local veterinarian or Pashusanvardhan Vibhag (Animal Husbandry) officer.'}</div>
+    </div>` : `<div class="tip-box">${ui.lang==='mr'?'वरील यादीतून एक कळप निवडा, म्हणजे त्याची लसीकरण व जंतनाशक योजना दिसेल.':'Select a flock above to see its vaccination & deworming plan.'}</div>`}
+  <div class="section-title">📝 ${ui.lang==='mr'?'नोंदवलेला इतिहास':'Logged history'}</div>
+  <div class="card">
+    ${logs.length? logs.map(h=>renderHealthLog(h)).join('') : `<div class="empty"><div class="icon">💉</div>No medicine/vaccine logs yet.</div>`}
+  </div>`;
+}
+function quickLogVaccine(batchId, idx){
+  const batch = S.batches.find(b=>b.id===batchId);
+  const plan = buildVaccinationPlan(batch);
+  const item = plan[idx];
+  ui.healthPrefill = { batchId, date: item.date<todayStr()?todayStr():item.date, name:item.name, method:item.method, notes:item.note };
+  ui.showHealthForm = true; render();
+  document.getElementById('content')?.scrollIntoView({behavior:'smooth'});
+}
+function renderHealthForm(){
+  const pf = ui.healthPrefill || {};
+  return `
+  <div class="form-card">
+    <h3>Log medicine / vaccine</h3>
+    <label>Flock / batch</label>
+    <select id="hf_batch">${S.batches.length? S.batches.map(b=>`<option value="${b.id}" ${pf.batchId===b.id?'selected':''}>${esc(b.name)} · ${b.breed}</option>`).join('') : '<option value="">Add a flock first</option>'}</select>
+    <label>Date</label><input id="hf_date" type="date" value="${pf.date||todayStr()}">
+    <label>Vaccine / medicine name</label><input id="hf_name" placeholder="e.g. Lasota, Gumboro, Albendazole" value="${esc(pf.name||'')}">
+    <label>Method</label><input id="hf_method" placeholder="e.g. Eye drop, drinking water, injection" value="${esc(pf.method||'')}">
+    <label>Notes</label><textarea id="hf_notes" placeholder="Dose, reaction, reason">${esc(pf.notes||'')}</textarea>
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="saveHealthLog()">Save</button>
+      <button class="btn btn-outline" onclick="ui.showHealthForm=false;ui.healthPrefill=null;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+async function saveHealthLog(){
+  if(S.batches.length===0){ showToast('Add a flock first'); return; }
+  const batchId = document.getElementById('hf_batch').value;
+  const date = document.getElementById('hf_date').value;
+  const name = document.getElementById('hf_name').value.trim();
+  const method = document.getElementById('hf_method').value.trim();
+  const notes = document.getElementById('hf_notes').value.trim();
+  if(!name){ showToast('Enter vaccine/medicine name'); return; }
+  S.poultryHealth.push({id:uid(), batchId, date, name, method, notes});
+  await saveKey('poultry-health-logs', S.poultryHealth);
+  ui.showHealthForm=false; ui.healthPrefill=null; showToast('Logged'); render();
+}
+async function deleteHealthLog(id){
+  S.poultryHealth = S.poultryHealth.filter(h=>h.id!==id);
+  await saveKey('poultry-health-logs', S.poultryHealth);
+  render();
+}
+function renderHealthLog(h){
+  const b = S.batches.find(x=>x.id===h.batchId);
+  return `<div class="log-item">
+    <div><b>${esc(h.name)}</b><div class="meta">${b?esc(b.name):'—'} · ${fmtDate(h.date)}${h.method?' · '+esc(h.method):''}${h.notes?' · '+esc(h.notes):''}</div></div>
+    <div><button class="close-x" onclick="deleteHealthLog('${h.id}')">✕</button></div>
+  </div>`;
+}
+
+/* -- Poultry sales -- */
+function renderPoultrySales(){
+  const logs = S.poultrySales.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const byType = {};
+  S.poultrySales.forEach(s=>{ byType[s.type]=(byType[s.type]||0)+Number(s.totalAmount||0); });
+  const rows = Object.entries(byType).sort((a,b)=>b[1]-a[1]);
+  return `
+  ${ui.showPoultrySaleForm ? renderPoultrySaleForm() : `<button class="btn btn-primary btn-full" onclick="ui.showPoultrySaleForm=true;render();">+ Log egg / bird sale</button>`}
+  ${rows.length? `<div class="card"><b style="font-size:13px;">Income by type</b>${rows.map(([t,amt])=>`<div class="log-item"><div>${esc(t)}</div><div class="amt">${money(amt)}</div></div>`).join('')}</div>`:''}
+  <div class="card">
+    ${logs.length? logs.map(s=>renderPoultrySaleLog(s)).join('') : `<div class="empty"><div class="icon">🛒</div>No egg or bird sales logged yet.</div>`}
+  </div>`;
+}
+function renderPoultrySaleForm(){
+  return `
+  <div class="form-card">
+    <h3>New egg / bird sale</h3>
+    <label>Flock / batch (optional)</label>
+    <select id="psf_batch"><option value="">— not linked —</option>${S.batches.map(b=>`<option value="${b.id}">${esc(b.name)} · ${b.breed}</option>`).join('')}</select>
+    <div class="form-grid">
+      <div><label>Type</label><select id="psf_type">${POULTRY_SALE_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div><label>Date</label><input id="psf_date" type="date" value="${todayStr()}"></div>
+    </div>
+    <div class="form-grid">
+      <div><label>Quantity (eggs/birds/kg)</label><input id="psf_qty" type="number" step="0.1" oninput="updatePoultrySaleTotal()"></div>
+      <div><label>Price per unit (₹)</label><input id="psf_price" type="number" step="0.1" oninput="updatePoultrySaleTotal()"></div>
+    </div>
+    <label>Buyer / market</label><input id="psf_buyer" placeholder="e.g. Local trader, Karad market">
+    <label>Total amount (₹)</label><input id="psf_total" type="number" readonly style="background:var(--green-soft);font-weight:700;">
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="savePoultrySale()">Save sale</button>
+      <button class="btn btn-outline" onclick="ui.showPoultrySaleForm=false;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+function updatePoultrySaleTotal(){
+  const q = Number(document.getElementById('psf_qty').value)||0;
+  const p = Number(document.getElementById('psf_price').value)||0;
+  document.getElementById('psf_total').value = (q*p).toFixed(2);
+}
+async function savePoultrySale(){
+  const batchId = document.getElementById('psf_batch').value;
+  const type = document.getElementById('psf_type').value;
+  const date = document.getElementById('psf_date').value;
+  const qty = Number(document.getElementById('psf_qty').value)||0;
+  const price = Number(document.getElementById('psf_price').value)||0;
+  const buyer = document.getElementById('psf_buyer').value.trim();
+  const totalAmount = qty*price;
+  if(qty<=0){ showToast('Enter quantity sold'); return; }
+  S.poultrySales.push({id:uid(), batchId, type, date, qty, price, buyer, totalAmount});
+  await saveKey('poultry-sales', S.poultrySales);
+  ui.showPoultrySaleForm=false; showToast('Sale recorded'); render();
+}
+async function deletePoultrySale(id){
+  S.poultrySales = S.poultrySales.filter(s=>s.id!==id);
+  await saveKey('poultry-sales', S.poultrySales);
+  render();
+}
+function renderPoultrySaleLog(s){
+  const b = S.batches.find(x=>x.id===s.batchId);
+  return `<div class="log-item">
+    <div><b>${esc(s.type)}</b> · ${s.qty} @ ₹${s.price}<div class="meta">${b?esc(b.name)+' · ':''}${esc(s.buyer||'—')} · ${fmtDate(s.date)}</div></div>
+    <div style="text-align:right;"><div class="amt">${money(s.totalAmount)}</div><button class="close-x" onclick="deletePoultrySale('${s.id}')">✕</button></div>
+  </div>`;
+}
+
+/* -- Poultry bookkeeping -- */
+function renderPoultryMoney(){
+  const income = S.poultrySales.reduce((a,s)=>a+Number(s.totalAmount||0),0);
+  const exp = S.poultryExpenses.reduce((a,e)=>a+Number(e.amount||0),0);
+  const net = income-exp;
+  const byCat = {};
+  S.poultryExpenses.forEach(e=>{ byCat[e.category]=(byCat[e.category]||0)+Number(e.amount||0); });
+  const catRows = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  const expenses = S.poultryExpenses.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  return `
+  <div class="card">
+    <div class="summary-grid">
+      <div class="summary-box income"><div class="lbl">Poultry income</div><div class="val">${money(income)}</div></div>
+      <div class="summary-box expense"><div class="lbl">Poultry expenses</div><div class="val">${money(exp)}</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="row-between"><span style="font-weight:700;font-size:15px;">Net profit — poultry</span><span style="font-weight:800;font-size:17px;color:${net>=0?'var(--green-dark)':'var(--red)'}">${money(net)}</span></div>
+  </div>
+  ${ui.showPoultryExpForm ? renderPoultryExpForm() : `<button class="btn btn-primary btn-full" onclick="ui.showPoultryExpForm=true;render();">+ Add poultry expense</button>`}
+  ${catRows.length? `<div class="card"><b style="font-size:13px;">Expenses by category</b>${catRows.map(([c,amt])=>`<div class="log-item"><div>${esc(c)}</div><div class="amt">${money(amt)}</div></div>`).join('')}</div>`:''}
+  <div class="section-title">All poultry expenses</div>
+  <div class="card">
+    ${expenses.length? expenses.map(e=>renderPoultryExpLog(e)).join('') : `<div class="empty"><div class="icon">💰</div>No poultry expenses logged yet.</div>`}
+  </div>
+  <div class="tip-box">This poultry income/expense total is also included in your farm-wide totals on the Home and vegetable Accounts tabs.</div>
+  `;
+}
+function renderPoultryExpForm(){
+  return `
+  <div class="form-card">
+    <h3>New poultry expense</h3>
+    <div class="form-grid">
+      <div><label>Date</label><input id="pef_date" type="date" value="${todayStr()}"></div>
+      <div><label>Category</label><select id="pef_cat">${POULTRY_EXP_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+    </div>
+    <label>Linked flock (optional)</label>
+    <select id="pef_batch"><option value="">— general poultry expense —</option>${S.batches.map(b=>`<option value="${b.id}">${esc(b.name)} · ${b.breed}</option>`).join('')}</select>
+    <label>Description</label><input id="pef_desc" placeholder="e.g. Broiler feed 50kg bag">
+    <label>Amount (₹)</label><input id="pef_amt" type="number" step="0.1">
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="savePoultryExpense()">Save expense</button>
+      <button class="btn btn-outline" onclick="ui.showPoultryExpForm=false;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+async function savePoultryExpense(){
+  const date = document.getElementById('pef_date').value;
+  const category = document.getElementById('pef_cat').value;
+  const batchId = document.getElementById('pef_batch').value;
+  const description = document.getElementById('pef_desc').value.trim();
+  const amount = Number(document.getElementById('pef_amt').value)||0;
+  if(amount<=0){ showToast('Enter an amount'); return; }
+  S.poultryExpenses.push({id:uid(), date, category, batchId, description, amount});
+  await saveKey('poultry-expenses', S.poultryExpenses);
+  ui.showPoultryExpForm=false; showToast('Expense added'); render();
+}
+async function deletePoultryExpense(id){
+  S.poultryExpenses = S.poultryExpenses.filter(e=>e.id!==id);
+  await saveKey('poultry-expenses', S.poultryExpenses);
+  render();
+}
+function renderPoultryExpLog(e){
+  const b = S.batches.find(x=>x.id===e.batchId);
+  return `<div class="log-item">
+    <div><b>${esc(e.category)}</b>${e.description?' · '+esc(e.description):''}<div class="meta">${b?esc(b.name)+' · ':''}${fmtDate(e.date)}</div></div>
+    <div style="text-align:right;"><div class="amt">${money(e.amount)}</div><button class="close-x" onclick="deletePoultryExpense('${e.id}')">✕</button></div>
+  </div>`;
+}
+
+/* ---- MARKET ---- */
+function renderMarket(){
+  const logs = S.sales.filter(s=> ui.saleFilterPlot==='all' || s.plotId===ui.saleFilterPlot)
+                      .sort((a,b)=> new Date(b.date)-new Date(a.date));
+  const byVeg = {};
+  S.sales.forEach(s=>{ byVeg[s.vegetable]=(byVeg[s.vegetable]||0)+Number(s.totalAmount||0); });
+  const vegRows = Object.entries(byVeg).sort((a,b)=>b[1]-a[1]);
+  return `
+  <div class="section-title">🛒 Market & sales</div>
+  ${ui.showSaleForm ? renderSaleForm() : `<button class="btn btn-primary btn-full" onclick="ui.showSaleForm=true;render();">+ Log a sale</button>`}
+  ${vegRows.length? `<div class="card">
+    <b style="font-size:13px;">Income by vegetable</b>
+    ${vegRows.map(([v,amt])=>`<div class="log-item"><div>${esc(v)}</div><div class="amt">${money(amt)}</div></div>`).join('')}
+  </div>`:''}
+  <div class="pill-tabs">
+    <div class="pill ${ui.saleFilterPlot==='all'?'active':''}" onclick="ui.saleFilterPlot='all';render();">All plots</div>
+    ${S.plots.map(p=>`<div class="pill ${ui.saleFilterPlot===p.id?'active':''}" onclick="ui.saleFilterPlot='${p.id}';render();">${esc(p.name)}</div>`).join('')}
+  </div>
+  <div class="card">
+    ${logs.length? logs.map(s=>renderSaleLog(s)).join('') : `<div class="empty"><div class="icon">🛒</div>No sales logged yet. Record every harvest sold — quantity, price and buyer.</div>`}
+  </div>`;
+}
+function renderSaleForm(){
+  return `
+  <div class="form-card">
+    <h3>New sale</h3>
+    <label>Plot</label>
+    <select id="sf_plot" onchange="document.getElementById('sf_veg').value=this.selectedOptions[0].dataset.veg">
+      <option value="">— not linked to a plot —</option>
+      ${S.plots.map(p=>`<option value="${p.id}" data-veg="${p.vegetable}">${esc(p.name)} · ${p.vegetable}</option>`).join('')}
+    </select>
+    <div class="form-grid">
+      <div><label>Vegetable</label><select id="sf_veg">${VEG_NAMES.map(v=>`<option>${v}</option>`).join('')}</select></div>
+      <div><label>Date</label><input id="sf_date" type="date" value="${todayStr()}"></div>
+    </div>
+    <div class="form-grid">
+      <div><label>Quantity (kg)</label><input id="sf_qty" type="number" step="0.1" oninput="updateSaleTotal()"></div>
+      <div><label>Price / kg (₹)</label><input id="sf_price" type="number" step="0.1" oninput="updateSaleTotal()"></div>
+    </div>
+    <label>Buyer / market (e.g. APMC Karad, local trader)</label><input id="sf_buyer" placeholder="APMC Karad">
+    <label>Total amount (₹)</label><input id="sf_total" type="number" readonly style="background:var(--green-soft);font-weight:700;">
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="saveSale()">Save sale</button>
+      <button class="btn btn-outline" onclick="ui.showSaleForm=false;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+function updateSaleTotal(){
+  const q = Number(document.getElementById('sf_qty').value)||0;
+  const p = Number(document.getElementById('sf_price').value)||0;
+  document.getElementById('sf_total').value = (q*p).toFixed(2);
+}
+async function saveSale(){
+  const plotId = document.getElementById('sf_plot').value;
+  const vegetable = document.getElementById('sf_veg').value;
+  const date = document.getElementById('sf_date').value;
+  const qty = Number(document.getElementById('sf_qty').value)||0;
+  const price = Number(document.getElementById('sf_price').value)||0;
+  const buyer = document.getElementById('sf_buyer').value.trim();
+  const totalAmount = qty*price;
+  if(qty<=0){ showToast('Enter quantity sold'); return; }
+  S.sales.push({id:uid(), plotId, vegetable, date, qty, price, buyer, totalAmount});
+  await saveKey('market-sales', S.sales);
+  ui.showSaleForm=false; showToast('Sale recorded'); render();
+}
+async function deleteSale(id){
+  S.sales = S.sales.filter(s=>s.id!==id);
+  await saveKey('market-sales', S.sales);
+  render();
+}
+function renderSaleLog(s){
+  const p = S.plots.find(x=>x.id===s.plotId);
+  return `<div class="log-item">
+    <div><b>${esc(s.vegetable)}</b> · ${s.qty}kg @ ₹${s.price}<div class="meta">${p?esc(p.name)+' · ':''}${esc(s.buyer||'—')} · ${fmtDate(s.date)}</div></div>
+    <div style="text-align:right;"><div class="amt">${money(s.totalAmount)}</div><button class="close-x" onclick="deleteSale('${s.id}')">✕</button></div>
+  </div>`;
+}
+
+/* ---- ACCOUNTS / BOOKKEEPING ---- */
+function renderAccounts(){
+  const expenses = S.expenses.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const byCat = {};
+  S.expenses.forEach(e=>{ byCat[e.category]=(byCat[e.category]||0)+Number(e.amount||0); });
+  const catRows = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  const income = totalIncome(), exp = totalExpenses(), net = income-exp;
+  return `
+  <div class="section-title">💰 Bookkeeping — whole farm</div>
+  <div class="card">
+    <div class="summary-grid">
+      <div class="summary-box income"><div class="lbl">Total income (veg + poultry)</div><div class="val">${money(income)}</div></div>
+      <div class="summary-box expense"><div class="lbl">Total expenses (veg + poultry)</div><div class="val">${money(exp)}</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="row-between"><span style="font-weight:700;font-size:15px;">Net profit — whole farm</span><span style="font-weight:800;font-size:17px;color:${net>=0?'var(--green-dark)':'var(--red)'}">${money(net)}</span></div>
+  </div>
+  <div class="section-title">🥬 Vegetable side — detail</div>
+  ${ui.showExpForm ? renderExpForm() : `<button class="btn btn-primary btn-full" onclick="ui.showExpForm=true;render();">+ Add expense</button>`}
+  ${catRows.length? `<div class="card">
+    <b style="font-size:13px;">Expenses by category</b>
+    ${catRows.map(([c,amt])=>`<div class="log-item"><div>${esc(c)}</div><div class="amt">${money(amt)}</div></div>`).join('')}
+  </div>`:''}
+  <div class="section-title">All expenses</div>
+  <div class="card">
+    ${expenses.length? expenses.map(e=>renderExpLog(e)).join('') : `<div class="empty"><div class="icon">💰</div>No expenses logged yet.</div>`}
+  </div>
+  <div class="section-title">Per-plot profit &amp; loss<span class="tag">where linked</span></div>
+  <div class="card">
+    ${S.plots.length? S.plots.map(p=>{
+      const inc = S.sales.filter(s=>s.plotId===p.id).reduce((a,s)=>a+Number(s.totalAmount||0),0);
+      const ex = S.expenses.filter(e=>e.plotId===p.id).reduce((a,e)=>a+Number(e.amount||0),0);
+      const pnet = inc-ex;
+      return `<div class="log-item"><div><b>${esc(p.name)}</b><div class="meta">${p.vegetable} · Income ${money(inc)} − Expense ${money(ex)}</div></div><div class="amt" style="color:${pnet>=0?'var(--green-dark)':'var(--red)'}">${money(pnet)}</div></div>`;
+    }).join('') : `<div class="empty" style="padding:14px;">Add plots to see profit per plot.</div>`}
+  </div>
+  <div class="tip-box">🐔 For poultry income/expenses in detail, go to <b>Poultry → Bookkeeping</b>. Its totals are already folded into the whole-farm summary above.</div>
+  `;
+}
+function renderExpForm(){
+  return `
+  <div class="form-card">
+    <h3>New expense</h3>
+    <div class="form-grid">
+      <div><label>Date</label><input id="ef_date" type="date" value="${todayStr()}"></div>
+      <div><label>Category</label><select id="ef_cat">${EXP_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+    </div>
+    <label>Linked plot (optional)</label>
+    <select id="ef_plot"><option value="">— general farm expense —</option>${S.plots.map(p=>`<option value="${p.id}">${esc(p.name)} · ${p.vegetable}</option>`).join('')}</select>
+    <label>Description</label><input id="ef_desc" placeholder="e.g. Urea 2 bags">
+    <label>Amount (₹)</label><input id="ef_amt" type="number" step="0.1">
+    <div class="mini-row" style="margin-top:8px;">
+      <button class="btn btn-primary" onclick="saveExpense()">Save expense</button>
+      <button class="btn btn-outline" onclick="ui.showExpForm=false;render();">Cancel</button>
+    </div>
+  </div>`;
+}
+async function saveExpense(){
+  const date = document.getElementById('ef_date').value;
+  const category = document.getElementById('ef_cat').value;
+  const plotId = document.getElementById('ef_plot').value;
+  const description = document.getElementById('ef_desc').value.trim();
+  const amount = Number(document.getElementById('ef_amt').value)||0;
+  if(amount<=0){ showToast('Enter an amount'); return; }
+  S.expenses.push({id:uid(), date, category, plotId, description, amount});
+  await saveKey('expenses', S.expenses);
+  ui.showExpForm=false; showToast('Expense added'); render();
+}
+async function deleteExpense(id){
+  S.expenses = S.expenses.filter(e=>e.id!==id);
+  await saveKey('expenses', S.expenses);
+  render();
+}
+function renderExpLog(e){
+  const p = S.plots.find(x=>x.id===e.plotId);
+  return `<div class="log-item">
+    <div><b>${esc(e.category)}</b>${e.description?' · '+esc(e.description):''}<div class="meta">${p?esc(p.name)+' · ':''}${fmtDate(e.date)}</div></div>
+    <div style="text-align:right;"><div class="amt">${money(e.amount)}</div><button class="close-x" onclick="deleteExpense('${e.id}')">✕</button></div>
+  </div>`;
+}
+
+/* ---------------- Boot ---------------- */
+function attachGlobalHandlers(){ /* all handlers are inline for simplicity */ }
+(async function init(){
+  await loadAll();
+  render();
+  attachLiveSync();
+})();
+</script>
+</body>
+</html>
